@@ -1,0 +1,120 @@
+<div class="h-100 d-flex flex-column">
+  <div class="row">
+
+    <!-- Search Box -->
+    <div class="col-12 p-1">
+      <input class="form-control" type="text" placeholder="Search..." [(ngModel)]="search" />
+    </div>
+
+    <!-- Toolbar -->
+    <div class="col-12 p-1 border d-flex justify-content-between b-toolbar">
+
+      <!-- Left Buttons -->
+      <div>
+        <!-- Create -->
+        <button class="btn btn-primary btn-sm" (click)="onCreate()" [disabled]="!canCreate">
+          <fa-icon icon="plus"></fa-icon>
+          <span class="d-none d-md-inline ">&nbsp;&nbsp;Create</span>
+        </button>
+
+        <!-- Refresh -->
+        <button class="btn btn-light btn-sm text-primary b-white-button" (click)="onRefresh()">
+          <fa-icon icon="sync-alt"></fa-icon>
+          <span class="d-none d-md-inline ">&nbsp;&nbsp;Refresh</span>
+        </button>
+      </div>
+
+      <!-- Right Buttons -->
+      <div>
+        <ng-container *ngTemplateOutlet="toolbarExtrasTemplate; context: { bag: bag }">
+        </ng-container>
+
+        <!-- Paging -->
+        <div class="d-inline small mr-2 ml-2">
+          <span class="b-vertical-align-middle">{{ from | number }}-{{ to | number }}</span>
+          <span class="b-vertical-align-middle"> / {{ total | number }}</span>
+        </div>
+        <div class="d-inline">
+          <button class="btn btn-light btn-sm b-white-button"
+                  type="button" title="First" (click)="onFirstPage()" [disabled]="!canFirstPage">
+            <fa-icon icon="angle-double-left"></fa-icon>
+          </button>
+          <button class="btn btn-light btn-sm b-white-button"
+                  type="button" title="First" (click)="onPreviousPage()" [disabled]="!canPreviousPage">
+            <fa-icon icon="angle-left"></fa-icon>
+          </button>
+          <button class="btn btn-light btn-sm b-white-button"
+                  type="button" title="First" (click)="onNextPage()" [disabled]="!canNextPage">
+            <fa-icon icon="angle-right"></fa-icon>
+          </button>
+        </div>
+
+        <!-- Tiles/Table Toggle -->
+        <div class="btn-group btn-group-toggle">
+          <label class="btn btn-sm btn-light" [class.active]="showTilesView" title="Tiles" (click)="onTilesView()">
+            <input type="radio" name="searchView"><fa-icon icon="th-large"></fa-icon>
+          </label>
+          <label class="btn btn-sm btn-light" [class.active]="showTableView" title="Table" (click)="onTableView()">
+            <input type="radio" name="searchView"><fa-icon icon="list"></fa-icon>
+          </label>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- The search results -->
+  <div class="row b-rest-of-screen bg-light">
+    <div class="w-100">
+
+      <!-- Tiles -->
+      <div class="col-12" *ngIf="showTilesView">
+        <div class="row mb-3" >
+          <div class="col-12 col-sm-6 col-md-4 col-lg-3 col-xl-2 p-0 p-sm-1" *ngFor="let model of masterData">
+            <div class="border p-2 bg-white b-tile" [routerLink]="['./', model.Id]">
+              <ng-container *ngTemplateOutlet="tileTemplate;context: { model: model }">
+              </ng-container>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Table -->
+      <div class="w-100 table-responsive" *ngIf="showTableView">
+        <table class="table table-hover table-sm table-striped bg-white border-bottom">
+          <thead class="small">
+            <tr [class.dropup]="desc">
+              <th *ngFor="let col of tableDefinition"
+                  [class.b-pointer]="!!col.orderBy"
+                  [class.dropdown-toggle]="(!!col.orderBy) && (orderBy === col.orderBy)"
+                  (click)="onOrderBy(col.orderBy)">
+                {{ col.display }}
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <ng-container *ngFor="let model of masterData">
+              <tr class=" b-pointer" [routerLink]="['./', model.Id]">
+                <ng-container *ngTemplateOutlet="tableRowTemplate;context: { model: model }">
+                </ng-container>
+              </tr>
+            </ng-container>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Spinner -->
+      <div class="w-100 p-2 d-flex justify-content-center" *ngIf="showSpinner">
+        <b-spinner [scale]="2"></b-spinner>
+      </div>
+
+      <!-- No items found -->
+      <div class="w-100 pl-3 pr-3" *ngIf="showNoItemsFound">No items found.</div>
+
+      <!-- Error message -->
+      <b-error-message *ngIf="showErrorMessage">
+        {{ errorMessage }}
+      </b-error-message>
+    </div>
+  </div>
+</div>
+

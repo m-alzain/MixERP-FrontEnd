@@ -1,0 +1,138 @@
+<div class="h-100 d-flex flex-column">
+  <!-- Breadcrumb and Toolbar -->
+  <div class="row">
+
+    <!-- Breadcrumb -->
+    <div class="w-100">
+      <ul class="breadcrumb bg-white mb-0">
+        <li class="breadcrumb-item">
+          <a class="text-primary" [routerLink]="['..']">
+            {{ masterCrumb }}
+          </a>
+        </li>
+        <li class="breadcrumb-item active">
+          <ng-container *ngIf="(!showSpinner); else loading">
+            <ng-container *ngTemplateOutlet="detailsCrumb; context: { model: activeModel }">
+            </ng-container>
+          </ng-container>
+          <ng-template #loading>Loading...</ng-template>
+        </li>
+      </ul>
+    </div>
+
+    <!-- Toolbar -->
+    <div class="col-12 p-1 border  d-flex justify-content-between b-toolbar">
+      <!-- View Toolbar -->
+      <div *ngIf="showViewToolbar">
+        <!-- Edit -->
+        <button class="btn btn-primary btn-sm" (click)="onEdit()" [disabled]="!canEdit">
+          <fa-icon icon="edit"></fa-icon>
+          <span class="d-none d-md-inline">&nbsp;&nbsp;Edit</span>
+        </button>
+
+        <!-- Create -->
+        <button class="btn btn-light btn-sm text-primary b-white-button" (click)="onCreate()" [disabled]="!canCreate">
+          <fa-icon icon="plus"></fa-icon>
+          <span class="d-none d-md-inline">&nbsp;&nbsp;Create</span>
+        </button>
+
+        <!-- Delete -->
+        <button class="btn btn-light btn-sm text-primary b-white-button" (click)="modalService.open(confirmDeleteModal, {ariaLabelledBy: 'modal-basic-title'})" [disabled]="!canDelete" *ngIf="showDelete">
+          <fa-icon icon="trash-alt"></fa-icon>
+          <span class="d-none d-md-inline">&nbsp;&nbsp;Delete</span>
+        </button>
+
+        <!-- Refresh -->
+        <button class="btn btn-light btn-sm text-primary b-white-button" (click)="onRefresh()">
+          <fa-icon icon="sync-alt"></fa-icon>
+          <span class="d-none d-md-inline">&nbsp;&nbsp;Refresh</span>
+        </button>
+
+      </div>
+
+      <!-- Edit Toolbar -->
+      <div class="b-toolbar" *ngIf="showEditToolbar">
+        <button class="btn btn-primary btn-sm" (click)="onSave()" [disabled]="!canSave">
+          <fa-icon icon="save"></fa-icon>
+          <span class="d-none d-md-inline">&nbsp;&nbsp;Save</span>
+        </button>
+
+        <button class="btn btn-light btn-sm text-primary b-white-button" (click)="onCancel()" [disabled]="!canCancel">
+          <fa-icon icon="times"></fa-icon>
+          <span class="d-none d-md-inline">&nbsp;&nbsp;Cancel</span>
+        </button>
+      </div>
+    </div>
+
+
+  </div>
+
+  <!-- Content Area -->
+  <div class="row b-rest-of-screen bg-light" [class.b-main-and-side]="!!sidebarTemplate">
+    <div class="w-100" [class.b-main-document]="!!sidebarTemplate">
+      <!-- Second toolbar -->
+      <div *ngIf="!!secondToolbarTemplate && showViewEdit" class="col-12 border-left border-right border-bottom bg-white w-100 b-toolbar">
+        <ng-container *ngTemplateOutlet="secondToolbarTemplate;context: { model: activeModel, isEdit: isEdit }">
+        </ng-container>
+      </div>
+
+      <!-- View/Edit Document -->
+      <div class="p-0 p-sm-3 d-flex flex-column align-items-center border-top" *ngIf="showViewEdit">
+        <div class="border bg-white w-100 b-paper" (dblclick)="onDblClick()">
+          <div class="row m-0 pl-1 pl-sm-3 pr-1 pr-sm-3 pt-3 pt-sm-4 pb-3 pb-sm-5">
+            <ng-container *ngTemplateOutlet="viewEditTemplate;context: { model: activeModel, isEdit: isEdit }">
+            </ng-container>
+          </div>
+        </div>
+      </div>
+
+      <!-- Spinner -->
+      <div class="mt-3" *ngIf="showSpinner">
+        <div class="w-100 p-2 d-flex justify-content-center">
+          <b-spinner [scale]="2"></b-spinner>
+        </div>
+      </div>
+
+      <!-- Error message -->
+      <div class="mt-3" *ngIf="showErrorMessage">
+        <b-error-message>
+          {{ errorMessage }}
+        </b-error-message>
+      </div>
+    </div>
+
+    <div *ngIf="!!sidebarTemplate && showViewEdit" class="b-sidebar bg-white">
+      <ng-container *ngTemplateOutlet="sidebarTemplate;context: { model: activeModel, isEdit: isEdit }">
+      </ng-container>
+    </div>
+  </div>
+</div>
+
+<!-- Error Modal -->
+<ng-template #errorModal let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title">Error</h5>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">{{ modalErrorMessage | json }}</div>
+  <div class="modal-footer">
+    <button class="btn btn-primary" (click)="modal.dismiss()">OK</button>
+  </div>
+</ng-template>
+
+<!-- Confirm Delete Modal -->
+<ng-template #confirmDeleteModal let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title">Confirmation</h5>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">Are you sure you want to delete?</div>
+  <div class="modal-footer">
+    <button class="btn btn-primary" (click)="modal.dismiss(); onDelete();">Yes</button>
+    <button class="btn btn-light text-primary b-white-button" (click)="modal.dismiss()">No</button>
+  </div>
+</ng-template>

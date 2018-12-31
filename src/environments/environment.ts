@@ -3,7 +3,24 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-  production: false
+  production: false,
+  api_url:'https://localhost:44365/',
+  Configuration: {
+    //apiRoot: 'https://securingangularappscourse-api.azurewebsites.net/api/',  
+    //public static stsAuthority = "https://securingangularappscourse-sts.azurewebsites.net/";
+    stsAuthority: "http://localhost:5000/",
+  
+    // public static apiRoot = 'http://localhost:2112/api/';
+    // public static stsAuthority = 'http://localhost:4242/';
+  
+    //public static stsAuthority = 'https://softinsight.auth0.com/';
+  
+    // public static clientId = 'spa-client';
+    clientId: 'angularclient',
+    //public static clientId = 'FVZYzaiuyFYR4bxPTtSriqNLgAE69Btn'; //softinsight
+  
+    clientRoot: 'http://localhost:4200/'
+  }
 };
 
 /*
