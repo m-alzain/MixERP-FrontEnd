@@ -38,9 +38,11 @@ export class FindJournalViewPageComponent {
     this.error$ = store.pipe(select(fromFinance.getJournalViewSearchError));
   }
 
-  search(query: string) {
-    this.store.dispatch(new FindJournalViewPageActions.SearchJournalViews(
-        {Amount:0,Book:'Journal Entry',From: '2017-01-01', To: '2018-12-31', Office:'Default', OfficeId:1,PostedBy:'',Reason:'',ReferenceNumber:'',StatementReference:'',Status:'',TranCode:'',TranId:0,UserId:1,VerifiedBy:'' },
-    ));
+  search(query: JournalViewQuery) {
+    // this.store.dispatch(new FindJournalViewPageActions.SearchJournalViews(
+    //     {Amount:0,Book:'Journal Entry',From: '2017-01-01', To: '2018-12-31', Office:'Default', OfficeId:1,PostedBy:'',Reason:'',ReferenceNumber:'',StatementReference:'',Status:'',TranCode:'',TranId:0,UserId:1,VerifiedBy:'' },
+    // ));
+
+    this.store.dispatch(new FindJournalViewPageActions.SearchJournalViews(query));
   }
 }

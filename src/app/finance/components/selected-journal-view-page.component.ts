@@ -22,9 +22,12 @@ export class SelectedJournalViewPageComponent {
 
   constructor(private store: Store<fromFinance.State>) {
     this.journalView$ = store.pipe(select(fromFinance.getSelectedJournalView));
-    this.journalView$.subscribe(      
-      j => console.log(j)
-      );
+    // for debugging
+    // this.journalView$.subscribe(      
+    //   j => console.log(j)
+    //   );
+
+    
     // this.isSelectedBookInCollection$ = store.pipe(
     //   select(fromFinance.isSelectedBookInCollection)
     // );
