@@ -35,7 +35,7 @@ import { stringify } from '@angular/compiler/src/util';
           </mat-form-field>
           
           <mat-form-field>
-            <input matInput placeholder="TranId"  title="TranId" type="text" formControlName="TranIdInputText">
+            <input matInput placeholder="TranId"  title="TranId" type="number" formControlName="TranIdInputText">
           </mat-form-field>
 
           <mat-form-field>
@@ -75,11 +75,11 @@ import { stringify } from '@angular/compiler/src/util';
           </mat-form-field>
 
           <mat-form-field>
-            <input matInput placeholder="UserId"  title="UserId" type="text" formControlName="UserIdInputText">
+            <input matInput placeholder="UserId"  title="UserId" type="number" formControlName="UserIdInputText">
           </mat-form-field>
 
           <mat-form-field>
-            <input matInput placeholder="OfficeId"  title="OfficeId" type="text" formControlName="OfficeIdInputText">
+            <input matInput placeholder="OfficeId"  title="OfficeId" type="number" formControlName="OfficeIdInputText">
           </mat-form-field>
 
           <button mat-raised-button class="btn btn-primary" type="submit" [disabled]="!JournalViewForm.valid">Show</button>
@@ -138,19 +138,19 @@ export class JournalViewSearchComponent {
 
     FromInputDate :[''],
     ToInputDate : [''],
-    TranIdInputText : [''],
+    TranIdInputText : [0],
     TranCodeInputText : [''],
     ReferenceNumberInputText : [''],
     StatementReferenceInputText : [''],
     PostedByInputText : [''],
 
-    AmountInputText : [''],
+    AmountInputText : [0],
     OfficeInputText : [''],
     StatusInputText : [''],
     VerifiedByInputText : [''],
     ReasonInputText : [''],
-    UserIdInputText : [''],
-    OfficeIdInputText : ['']
+    UserIdInputText : [0],
+    OfficeIdInputText : [0]
 });
 
 

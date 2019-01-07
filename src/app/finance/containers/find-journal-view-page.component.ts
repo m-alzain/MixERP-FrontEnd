@@ -17,9 +17,11 @@ import * as fromFinance from '../reducers';
       [error]="error$ | async"
       (search)="search($event)">
     </bc-journal-view-search>
+  
     <bc-journal-view-preview-list
-      [JournalViews]="journalViews$ | async">
+      [journalViews$]="journalViews$">
     </bc-journal-view-preview-list>
+   
   `,
 })
 export class FindJournalViewPageComponent {
@@ -39,10 +41,6 @@ export class FindJournalViewPageComponent {
   }
 
   search(query: JournalViewQuery) {
-    // this.store.dispatch(new FindJournalViewPageActions.SearchJournalViews(
-    //     {Amount:0,Book:'Journal Entry',From: '2017-01-01', To: '2018-12-31', Office:'Default', OfficeId:1,PostedBy:'',Reason:'',ReferenceNumber:'',StatementReference:'',Status:'',TranCode:'',TranId:0,UserId:1,VerifiedBy:'' },
-    // ));
-
     this.store.dispatch(new FindJournalViewPageActions.SearchJournalViews(query));
   }
 }

@@ -12,7 +12,12 @@ import {
   MatDialogModule,
   MatDatepickerModule,
   MatNativeDateModule,
+
+  MatTableModule,
+  MatPaginatorModule,
+  MatSortModule
 } from '@angular/material';
+
 
 @NgModule({
   imports: [
@@ -27,6 +32,10 @@ import {
     MatDialogModule,
     MatDatepickerModule,
     MatNativeDateModule,
+
+    MatTableModule,
+    MatPaginatorModule,
+    MatSortModule 
   ],
   exports: [
     MatInputModule,
@@ -40,6 +49,10 @@ import {
     MatDialogModule,
     MatDatepickerModule,
     MatNativeDateModule,
+
+    MatTableModule,
+    MatPaginatorModule,
+    MatSortModule
   ],
 })
 export class MaterialModule {}

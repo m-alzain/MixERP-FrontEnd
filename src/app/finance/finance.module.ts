@@ -21,7 +21,7 @@ import { FindJournalViewPageComponent, ViewJournalViewPageComponent } from './co
 
     ComponentsModule,
     FinanceRoutingModule,
-
+    
     /**
      * StoreModule.forFeature is used for composing state
      * from feature modules. These modules can be loaded
