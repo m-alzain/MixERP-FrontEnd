@@ -2,10 +2,11 @@
   <div class="row">
 
     <!-- Search Box -->
+    <!-- 
     <div class="col-12 p-1">
       <input class="form-control" type="text" placeholder="Search..." [(ngModel)]="search" />
     </div>
-
+    -->
     <!-- Toolbar -->
     <div class="col-12 p-1 border d-flex justify-content-between b-toolbar">
 
@@ -29,7 +30,9 @@
         <ng-container *ngTemplateOutlet="toolbarExtrasTemplate; context: { bag: bag }">
         </ng-container>
 
+        
         <!-- Paging -->
+        <!-- 
         <div class="d-inline small mr-2 ml-2">
           <span class="b-vertical-align-middle">{{ from | number }}-{{ to | number }}</span>
           <span class="b-vertical-align-middle"> / {{ total | number }}</span>
@@ -48,6 +51,7 @@
             <fa-icon icon="angle-right"></fa-icon>
           </button>
         </div>
+        -->
 
         <!-- Tiles/Table Toggle -->
         <div class="btn-group btn-group-toggle">
@@ -70,7 +74,7 @@
       <div class="col-12" *ngIf="showTilesView">
         <div class="row mb-3" >
           <div class="col-12 col-sm-6 col-md-4 col-lg-3 col-xl-2 p-0 p-sm-1" *ngFor="let model of masterData">
-            <div class="border p-2 bg-white b-tile" [routerLink]="['./', model.Id]">
+            <div class="border p-2 bg-white b-tile" [routerLink]="['./', idFunc(model)]">
               <ng-container *ngTemplateOutlet="tileTemplate;context: { model: model }">
               </ng-container>
             </div>
@@ -93,7 +97,7 @@
           </thead>
           <tbody>
             <ng-container *ngFor="let model of masterData">
-              <tr class=" b-pointer" [routerLink]="['./', model.Id]">
+              <tr class=" b-pointer" [routerLink]="['./', idFunc(model)]">
                 <ng-container *ngTemplateOutlet="tableRowTemplate;context: { model: model }">
                 </ng-container>
               </tr>
@@ -103,7 +107,7 @@
       </div>
 
       <!-- Spinner -->
-      <div class="w-100 p-2 d-flex justify-content-center" *ngIf="showSpinner">
+      <div class="w-100 p-2 d-flex justify-content-center" *ngIf="loading">
         <b-spinner [scale]="2"></b-spinner>
       </div>
 
@@ -111,8 +115,8 @@
       <div class="w-100 pl-3 pr-3" *ngIf="showNoItemsFound">No items found.</div>
 
       <!-- Error message -->
-      <b-error-message *ngIf="showErrorMessage">
-        {{ errorMessage }}
+      <b-error-message *ngIf="error">
+        {{ error }}
       </b-error-message>
     </div>
   </div>

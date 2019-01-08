@@ -1,8 +1,6 @@
 import { Component, Output, Input, EventEmitter } from '@angular/core';
 import { JournalViewQuery } from '../models';
-import { FormBuilder, FormGroup, FormControl } from '@angular/forms';
-import { jsonpCallbackContext } from '@angular/common/http/src/module';
-import { stringify } from '@angular/compiler/src/util';
+import { FormBuilder } from '@angular/forms';
 
 @Component({
   selector: 'bc-journal-view-search',
@@ -10,21 +8,7 @@ import { stringify } from '@angular/compiler/src/util';
     <mat-card>
       <mat-card-title>Find a JournalView</mat-card-title>
       <mat-card-content>       
-        <form class="row" [formGroup]="JournalViewForm" (ngSubmit)="onSubmit()">
-
-        <!--
-          <mat-form-field>
-            <input matInput placeholder="Search for a journal view" [value]="query?.TranCode" (keyup)="search.emit($event.target.value)">
-          </mat-form-field>
-          -->
-
-          <!--
-          <mat-form-field>
-            <input matInput [matDatepicker]="FromDatepicker"  placeholder="From" title="From"  formControlName="FromInputDate">
-            <mat-datepicker-toggle matSuffix [for]="FromDatepicker"></mat-datepicker-toggle>
-            <mat-datepicker #FromDatepicker></mat-datepicker>
-          </mat-form-field>        
-          -->
+        <form class="row" [formGroup]="JournalViewForm" (ngSubmit)="onSubmit()">      
 
           <mat-form-field>
           <input  matInput data-persist placeholder="From" title="From" type="date" formControlName="FromInputDate">
@@ -82,13 +66,11 @@ import { stringify } from '@angular/compiler/src/util';
             <input matInput placeholder="OfficeId"  title="OfficeId" type="number" formControlName="OfficeIdInputText">
           </mat-form-field>
 
-          <button mat-raised-button class="btn btn-primary" type="submit" [disabled]="!JournalViewForm.valid">Show</button>
+          <button mat-raised-button class="btn btn-primary  btn-sm" type="submit" [disabled]="!JournalViewForm.valid">Show</button>
         </form>
-        <mat-spinner [class.show]="searching" [diameter]="30" [strokeWidth]="3"></mat-spinner>
-        
+
       </mat-card-content>
-      <mat-card-footer><span *ngIf="error">{{error}}</span></mat-card-footer>
-      
+
     </mat-card>
   `,
   styles: [
@@ -126,12 +108,9 @@ import { stringify } from '@angular/compiler/src/util';
 })
 export class JournalViewSearchComponent {
 
-  constructor(private fb: FormBuilder){
-      
+  constructor(private fb: FormBuilder){     
   }
-  @Input() query: JournalViewQuery;
-  @Input() searching = false;
-  @Input() error = '';
+
   @Output() search = new EventEmitter<JournalViewQuery>();
 
   JournalViewForm = this.fb.group({

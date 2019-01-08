@@ -5,16 +5,16 @@ import { RouterModule } from '@angular/router';
 
 import { JournalViewDetailComponent } from 'src/app/finance/components/journal-view-detail.component';
 import { JournalViewPreviewListComponent } from 'src/app/finance/components/journal-view-preview-list.component';
-import { JournalViewPreviewComponent } from 'src/app/finance/components/journal-view-preview.component';
 import { JournalViewSearchComponent } from 'src/app/finance/components/journal-view-search.component';
 import { SelectedJournalViewPageComponent } from 'src/app/finance/components/selected-journal-view-page.component';
 
 import { MaterialModule } from 'src/app/material';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { SharedModule } from 'src/app/shared';
 
 export const COMPONENTS = [
     JournalViewDetailComponent,
-    JournalViewPreviewListComponent,
-    JournalViewPreviewComponent,
+    JournalViewPreviewListComponent,   
     JournalViewSearchComponent,
     SelectedJournalViewPageComponent,
 ];
@@ -25,6 +25,10 @@ export const COMPONENTS = [
     ReactiveFormsModule,
     MaterialModule,
     RouterModule,
+    
+    FontAwesomeModule,
+
+    SharedModule,
   ],
   declarations: COMPONENTS,
   exports: COMPONENTS,

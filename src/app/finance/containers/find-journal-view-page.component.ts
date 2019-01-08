@@ -12,14 +12,14 @@ import * as fromFinance from '../reducers';
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <bc-journal-view-search
-      [query]="journalViewSearchQuery$ | async"
-      [searching]="loading$ | async"
-      [error]="error$ | async"
       (search)="search($event)">
     </bc-journal-view-search>
   
     <bc-journal-view-preview-list
-      [journalViews$]="journalViews$">
+      [masterData]="journalViews$  | async"
+      [loading]="loading$  | async"
+      [error]="error$  | async"
+      >
     </bc-journal-view-preview-list>
    
   `,
