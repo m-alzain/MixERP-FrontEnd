@@ -11,3 +11,7 @@ export {
   SelectedJournalViewPageActions,
   ViewJournalViewPageActions,
 };
+
+
+// V2
+export *  from './journal-entry.actions';

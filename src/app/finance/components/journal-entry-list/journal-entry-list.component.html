@@ -1,0 +1,100 @@
+<mat-card>   
+    <mat-card-title class="mb-2">Search Journal Entry</mat-card-title>
+    <mat-card-content>          
+        <form class="row" #searchForm="ngForm" (ngSubmit)="fetch()">          
+            <mat-form-field>
+                <input matInput [matDatepicker]="fromDatepicker" placeholder="From" [(ngModel)]="entryQuery.From" name="from">
+                <mat-datepicker-toggle matSuffix [for]="fromDatepicker"></mat-datepicker-toggle>
+                <mat-datepicker #fromDatepicker></mat-datepicker>
+            </mat-form-field> 
+            
+            <mat-form-field>
+                <input matInput [matDatepicker]="toDatepicker" placeholder="To" [(ngModel)]="entryQuery.To" name="to">
+                <mat-datepicker-toggle matSuffix [for]="toDatepicker"></mat-datepicker-toggle>
+                <mat-datepicker #toDatepicker></mat-datepicker>
+            </mat-form-field>            
+
+            <mat-form-field>
+                <input matInput placeholder="Code"  [(ngModel)]="entryQuery.Code"  name="tranCode">
+            </mat-form-field>
+
+            <mat-form-field>
+                <input matInput placeholder="ReferenceNumber"  [(ngModel)]="entryQuery.ReferenceNumber"  name="referenceNumber">
+            </mat-form-field>
+
+            <mat-form-field>
+                <input matInput placeholder="Status"  [(ngModel)]="entryQuery.StatusId" name="status">
+            </mat-form-field>
+
+            <mat-form-field>
+                <input matInput placeholder="ReferenceNumber"  [(ngModel)]="entryQuery.ReferenceNumber"  name="referenceNumber">
+            </mat-form-field>
+
+            <mat-form-field>
+                <input matInput placeholder="Office"  [(ngModel)]="entryQuery.OfficeId"  name="officeId">
+            </mat-form-field>
+                        
+            <div class="my-2">
+                <button class="btn btn-primary btn-sm" mat-button type="submit" [disabled]="!searchForm.form.valid" >Show</button>
+            </div> 
+        </form>
+                
+        <b-master               
+            [tileTemplate]="tileTemplate"
+            [tableDefinition]="[
+                { display: 'TranId', orderBy: 'TransactionMasterId' },
+                { display: 'TranCode', orderBy: 'TransactionCode' },
+                { display: 'ValueDate',  orderBy: 'ValueDate'},
+                { display: 'BookDate' },
+                { display: 'RefererenceNumber' },                
+                { display: 'StatementReference' },               
+                { display: 'Office' },
+                { display: 'Status' },
+                { display: 'VerifiedBy' },
+                { display: 'VerifiedOn' },
+                { display: 'Reason' },
+                { display: 'CostCenter' }
+                ]"
+            [tableRowTemplate]="tableRowTemplate"
+            [masterData]="masterData"
+            [loading]="loading"
+            [error]="error"
+            [idFunc]="idFun"
+            
+            (refreshEvent)="fetch()">
+            
+        </b-master>
+    </mat-card-content>           
+</mat-card>
+        
+<ng-template #tileTemplate let-model="model">
+    <div class="d-flex justify-content-between">
+        <span class="d-block text-truncate">{{ model.TransactionCode }}</span>       
+    </div>
+    <div class="d-flex justify-content-between mt-1 small">
+        <span>{{model.ValueDate | date }}</span>
+        <ng-container *ngTemplateOutlet="stateTemplate; context: { model: model }"></ng-container>
+    </div>
+</ng-template>
+
+<ng-template #tableRowTemplate let-model="model">
+    <td>{{ model.TransactionMasterId }}</td>
+    <td>{{ model.TransactionCode }}</td>
+    <td>{{ model.ValueDate | date }}</td>
+    <td>{{ model.BookDate | date }}</td>
+    <td>{{ model.ReferenceNumber }}</td>  
+    <td>{{ model.StatementReference }}</td>
+    <td>{{ model.Office }}</td>
+    <td><ng-container *ngTemplateOutlet="stateTemplate; context: { model: model }"></ng-container></td>
+    <td>{{ model.VerifiedByUser }}</td>
+    <td>{{ model.LastVerifiedOn | date }}</td>
+    <td>{{ model.VerificationReason }}</td>
+    <td>{{ model.CostCenter }}</td>
+</ng-template>
+
+<ng-template #stateTemplate let-model="model">
+    <span class="text-white pl-1 pr-1"
+            [class.bg-secondary]="model.Status === 'Submitted' || model.Status === 'Draft'"
+            [class.bg-dark]="model.Status === 'Automatically Approved by Workflow'" [class.bg-danger]="model.Status === 'Rejected'"
+            [class.bg-warning]="model.Status === 'Canceled'" [class.bg-success]="model.Status === 'Posted'">{{( model.Status.length>10)? ( model.Status | slice:0:15)+' ...':( model.Status )}}</span>
+</ng-template>

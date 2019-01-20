@@ -12,12 +12,13 @@ import {
   MatDialogModule,
   MatDatepickerModule,
   MatNativeDateModule,
-
   MatTableModule,
   MatPaginatorModule,
-  MatSortModule
+  MatSortModule,
 } from '@angular/material';
 
+import {MenuModule} from 'primeng/menu';
+import {CalendarModule} from 'primeng/calendar';
 
 @NgModule({
   imports: [
@@ -32,10 +33,12 @@ import {
     MatDialogModule,
     MatDatepickerModule,
     MatNativeDateModule,
-
     MatTableModule,
     MatPaginatorModule,
-    MatSortModule 
+    MatSortModule,
+
+    MenuModule,
+    CalendarModule
   ],
   exports: [
     MatInputModule,
@@ -49,10 +52,12 @@ import {
     MatDialogModule,
     MatDatepickerModule,
     MatNativeDateModule,
-
     MatTableModule,
     MatPaginatorModule,
-    MatSortModule
+    MatSortModule,
+
+    MenuModule,
+    CalendarModule
   ],
 })
 export class MaterialModule {}

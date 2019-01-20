@@ -1,1 +1,1 @@
-export * from './journal-view'
+export * from './journal-entry'

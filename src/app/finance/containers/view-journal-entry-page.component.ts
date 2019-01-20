@@ -5,35 +5,36 @@ import { Subscription } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 import * as fromFinance from 'src/app/finance/reducers';
-import { ViewJournalViewPageActions } from 'src/app/finance/actions';
+import { SelectJournalEntry } from 'src/app/finance/actions';
 
 /**
  * Note: Container components are also reusable. Whether or not
  * a component is a presentation component or a container
  * component is an implementation detail.
  *
- * The View Book Page's responsibility is to map router params
- * to a 'Select' book action. Actually showing the selected
- * book remains a responsibility of the
- * SelectedBookPageComponent
+ * The View Journal Entry Page's responsibility is to map router params
+ * to a 'Select' Journal Entry action. Actually showing the selected
+ * Journal Entry remains a responsibility of the
+ * JournalEntryDetailComponent
  */
 @Component({
-  selector: 'bc-view-journal-view-page',
+  selector: 'finance-view-journal-entry-page',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <bc-selected-journal-view-page></bc-selected-journal-view-page>
+    <finance-journal-entry-detail></finance-journal-entry-detail>
   `,
 })
-export class ViewJournalViewPageComponent implements OnDestroy {
+export class ViewJournalEntryPageComponent implements OnDestroy {
   actionsSubscription: Subscription;
 
   constructor(store: Store<fromFinance.State>, route: ActivatedRoute) {
     this.actionsSubscription = route.params
-      .pipe(map(params => new ViewJournalViewPageActions.SelectJournalView(+params.id)))
+      .pipe(map(params => new SelectJournalEntry(+params.id)))
       .subscribe(store);
   }
 
   ngOnDestroy() {
     this.actionsSubscription.unsubscribe();
   }
+  
 }

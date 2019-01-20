@@ -18,8 +18,8 @@ export class ApiService {
     return  throwError(error.error);
   }
 
-  get(path: string, params: HttpParams = new HttpParams()): Observable<any> {
-    return this.http.get(`${environment.api_url}${path}`, { params })
+  get<T>(path: string, params: HttpParams = new HttpParams()): Observable<any> {
+    return this.http.get<T>(`${environment.api_url}${path}`, { params })
       .pipe(
         catchError((error) => {
             const friendlyError = friendly(error);
@@ -40,13 +40,13 @@ export class ApiService {
     );
   }
 
-  post(path: string, body: Object = {}): Observable<any> { 
+  post<T>(path: string, body: Object = {}): Observable<any> { 
     const httpOptions = {
       headers: new HttpHeaders({
         'Content-Type':  'application/json'
       })
     };  
-    return this.http.post(
+    return this.http.post<T>(
       `${environment.api_url}${path}`,
       JSON.stringify(body),httpOptions
     ).pipe(

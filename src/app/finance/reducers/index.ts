@@ -5,13 +5,20 @@ import {
 } from '@ngrx/store';
 import * as fromJournalViewSearch from './journal-view-search.reducer';
 import * as fromJournalViews from './journal-view.reducer';
-//import * as fromCollection from '@example-app/books/reducers/collection.reducer';
 import * as fromRoot from '../../reducers';
+
+// import { JournalEntrySearchState, JournalEntryEntityState, journalEntrySearchReducer, journalEntryEntityReducer } from './journal-entry.reducer';
+
+import * as fromJournalEntry from './journal-entry.reducer';
 
 export interface FinanceState {
   journalViewSearch: fromJournalViewSearch.State;
   journalViews: fromJournalViews.State;
-  //collection: fromCollection.State;
+  
+  
+  //V2
+  journalEntrySearchState: fromJournalEntry.JournalEntrySearchState;
+  journalEntryEntityState: fromJournalEntry.JournalEntryEntityState;
 }
 
 export interface State extends fromRoot.State {
@@ -21,7 +28,10 @@ export interface State extends fromRoot.State {
 export const reducers: ActionReducerMap<FinanceState, any> = {
   journalViewSearch: fromJournalViewSearch.reducer,
   journalViews: fromJournalViews.reducer,
-  //collection: fromCollection.reducer,
+  
+  //V2
+  journalEntrySearchState: fromJournalEntry.journalEntrySearchReducer,
+  journalEntryEntityState: fromJournalEntry.journalEntryEntityReducer,
 };
 
 /**
@@ -64,7 +74,16 @@ export const getSelectedJournalViewId = createSelector(
   getJournalViewsState,
   fromJournalViews.getSelectedJournalViewId
 );
+/// V2
+export const getJournalEntryState = createSelector(
+  getFinanceState,
+  state => state.journalEntryEntityState
+);
 
+export const getSelectedJournalEntryId = createSelector(
+  getJournalEntryState,
+  fromJournalEntry.getSelectedJournalEntryId
+);
 /**
  * Adapters created with @ngrx/entity generate
  * commonly used selector functions including
@@ -83,6 +102,22 @@ export const {
 export const getSelectedJournalView = createSelector(
   getJournalViewEntities,
   getSelectedJournalViewId,
+  (entities, selectedId) => {
+    return selectedId && entities[selectedId];
+  }
+);
+
+// V2
+export const {
+  selectIds: getJournalEntryIds,
+  selectEntities: getJournalEntryEntities,
+  selectAll: getAllJournalEntries,
+  selectTotal: getTotalJournalEntries,
+} = fromJournalEntry.journalEntryAdapter.getSelectors(getJournalEntryState);
+
+export const getSelectedJournalEntry = createSelector(
+  getJournalEntryEntities,
+  getSelectedJournalEntryId,
   (entities, selectedId) => {
     return selectedId && entities[selectedId];
   }
@@ -114,6 +149,29 @@ export const getJournalViewSearchError = createSelector(
   fromJournalViewSearch.getError
 );
 
+// V2
+export const getJournalEntrySearchState = createSelector(
+  getFinanceState,
+  (state: FinanceState) => state.journalEntrySearchState
+);
+
+export const getJournalEntrySearchIds = createSelector(
+  getJournalEntrySearchState,
+  fromJournalEntry.getJournalEntrySearchedIds
+);
+export const getJournalEntrySearchQuery = createSelector(
+  getJournalEntrySearchState,
+  fromJournalEntry.getJournalEntrySearchedQuery
+);
+export const getJournalEntrySearchLoading = createSelector(
+  getJournalEntrySearchState,
+  fromJournalEntry.getJournalEntrySearchedLoading
+);
+export const getJournalEntrySearchError = createSelector(
+  getJournalEntrySearchState,
+  fromJournalEntry.getJournalEntrySearchedError
+);
+
 /**
  * Some selector functions create joins across parts of state. This selector
  * composes the search result IDs to return an array of JournalViews in the store.
@@ -125,7 +183,14 @@ export const getJournalViewSearchResults = createSelector(
     return searchIds.map(id => journalViews[id]);
   }
 );
-
+// V2
+export const getJournalEntrySearchResults = createSelector(
+  getJournalEntryEntities,
+  getJournalEntrySearchIds,
+  (journalEntries, searchIds) => {
+    return searchIds.map(id => journalEntries[id]);
+  }
+);
 // export const getCollectionState = createSelector(
 //   getFinanceState,
 //   (state: FinanceState) => state.collection

@@ -10,10 +10,11 @@ import { SharedModule } from './../shared'
 
 import { ComponentsModule } from 'src/app/finance/components';
 import { FinanceRoutingModule } from './finance-routing.module';
-import { FindJournalViewPageComponent, ViewJournalViewPageComponent } from './containers';
+import { FindJournalViewPageComponent, ViewJournalEntryPageComponent } from './containers';
+import { JournalEntryEffects } from './effects/journal-entry.effects';
 
 @NgModule({
-  declarations: [FindJournalViewPageComponent, ViewJournalViewPageComponent],
+  declarations: [FindJournalViewPageComponent, ViewJournalEntryPageComponent],
   imports: [
     CommonModule,
 
@@ -38,7 +39,7 @@ import { FindJournalViewPageComponent, ViewJournalViewPageComponent } from './co
      * All Effects will only be instantiated once regardless of
      * whether they are registered once or multiple times.
      */
-    EffectsModule.forFeature([JournalViewEffects]),
+    EffectsModule.forFeature([JournalViewEffects, JournalEntryEffects]),
   ]
 })
 export class FinanceModule { }

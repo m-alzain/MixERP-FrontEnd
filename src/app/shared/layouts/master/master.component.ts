@@ -1,29 +1,10 @@
 import { Component, Input, OnDestroy, OnInit, TemplateRef, EventEmitter, Output } from '@angular/core';
 import { ActivatedRoute, ParamMap, Params, Router } from '@angular/router';
-import { Observable, of, merge, Subject, pipe } from 'rxjs';
-import { catchError, debounceTime, distinctUntilChanged, switchMap, tap } from 'rxjs/operators';
-import { DataService } from '../../services';
-import { ListResult } from '../../models/ListResult';
-import { JournalView } from 'src/app/finance/models';
-
-// import { GlobalsResolverService } from '../../data/globals-resolver.service';
 
 enum SearchView {
   tiles = 'tiles',
   table = 'table'
 }
-
-// enum MasterStatus {
-
-//   // The master data is currently being fetched from the server
-//   loading = 1,
-
-//   // The last fetch of data from the server completed successfully
-//   loaded = 2,
-
-//   // The last fetch of data from the server completed with an error
-//   error = 3,
-// }
 
 @Component({
   selector: 'b-master',
@@ -33,16 +14,10 @@ enum SearchView {
 export class MasterComponent implements OnInit, OnDestroy {
 
   @Input()
-  controller: string;
-
-  @Input()
   public tileTemplate: TemplateRef<any>;
 
   @Input()
-  public tableRowTemplate: TemplateRef<any>;
-
-  @Input()
-  public toolbarExtrasTemplate: TemplateRef<any>;
+  public tableRowTemplate: TemplateRef<any>;  
 
   @Input()
   public tableDefinition: { display: string, orderBy?: string }[];
@@ -54,7 +29,7 @@ export class MasterComponent implements OnInit, OnDestroy {
   @Input() loading: boolean;
   @Input() error: string;
   @Input() idFunc: (model: object) => number;
-  @Output() fetchEvent = new EventEmitter();
+  @Output() refreshEvent = new EventEmitter();
  
   // private PAGE_SIZE = 50;
   // private _search: string = null;
@@ -62,35 +37,13 @@ export class MasterComponent implements OnInit, OnDestroy {
   // private top = 0;
   // private _total = 0;
   private _orderBy: string = null;
-  // private _desc = true;
-  // private _bag: { [key: string]: any };
-  // private _masterData = [];
-  // private masterStatus: MasterStatus;
-  // private _errorMessage: string = null;
+  private _desc = true;
   private searchView: SearchView;
 
-  // private searchChanged$ = new Subject<string>();
-  // private notifyFetch$ = new Subject();
-  // private notifyDestruct$ = new Subject<void>();
-
   constructor(
-    // private data: DataService,
     private router: Router,
     private route: ActivatedRoute) {
 
-    // Parameters
-    // Use some RxJS magic to refresh the screen as the user changes the parameters
-    // const searchBoxSignals = this.searchChanged$.pipe(
-    //   debounceTime(300),
-    //   distinctUntilChanged(),
-    //   tap(() => this.skip = 0),
-    // );
-
-    // const otherSignals = this.notifyFetch$;
-    // const allSignals = merge(searchBoxSignals, otherSignals);
-    // allSignals.pipe(
-    //   switchMap(() => this.doFetch())
-    // ).subscribe();
   }
 
   ngOnInit() {
@@ -102,8 +55,10 @@ export class MasterComponent implements OnInit, OnDestroy {
     });
 
     // Always fetch when you open the screen
-    this.fetch();
-
+    if(!this.loading && (!this.masterData || this.masterData.length === 0) )
+    {
+      this.refreshEvent.emit();
+    }    
   }
 
   ngOnDestroy() {
@@ -111,10 +66,6 @@ export class MasterComponent implements OnInit, OnDestroy {
     // this.notifyDestruct$.next();
   }
 
-  private fetch() {
-    // this.notifyFetch$.next();
-    this.fetchEvent.emit();
-  }
 
   // private doFetch(): Observable<void> {
 
@@ -248,14 +199,6 @@ export class MasterComponent implements OnInit, OnDestroy {
     return this.searchView === SearchView.table;
   }
 
-  // get showErrorMessage(): boolean {
-  //   return this.masterStatus === MasterStatus.error;
-  // }
-
-  // get showSpinner(): boolean {
-  //   return this.masterStatus === MasterStatus.loading;
-  // }
-
   get showNoItemsFound(): boolean {
     return ! this.loading &&
       (!this.masterData || this.masterData.length === 0);
@@ -280,19 +223,8 @@ export class MasterComponent implements OnInit, OnDestroy {
   }
 
   onRefresh() {
-    if (! this.loading) {
-      this.fetch();
+    if (!this.loading ) {
+      this.refreshEvent.emit();
     }
   }
-
-  // get search(): string {
-  //   return this._search;
-  // }
-
-  // set search(val: string) {
-  //   if (this._search !== val) {
-  //     this._search = val;
-  //   }
-  //   this.searchChanged$.next(val);
-  // }
 }

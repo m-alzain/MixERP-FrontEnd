@@ -1,6 +1,6 @@
 <div class="d-flex flex-column h-100">
   <div class="navbar navbar-dark bg-dark navbar-expand-md">
-    <a routerLink="dashboard">
+    <a routerLink="">
       <b-brand></b-brand>
     </a>
     <button type="button" class="navbar-toggler" (click)="onToggleCollapse()">
@@ -8,30 +8,33 @@
     </button>
     <div class="collapse navbar-collapse justify-content-between" [ngbCollapse]="isCollapsed">
       <ol class="nav navbar-nav">
+        <!--
         <li class="nav-item"><a class="nav-link" routerLink="" routerLinkActive="active" (click)="onCollapse()">Support Requests</a></li>
         <li class="nav-item"><a class="nav-link" routerLink="dashboard" routerLinkActive="active" (click)="onCollapse()">Stores</a></li>
         <li class="nav-item"><a class="nav-link" routerLink="['dashboard']" routerLinkActive="active" (click)="onCollapse()">Products</a></li>
         <li class="nav-item"><a class="nav-link" routerLink="['dashboard']" routerLinkActive="active" (click)="onCollapse()">Users</a></li>
         <li class="nav-item" *ngIf="canViewData"><a class="nav-link" routerLink="['dashboard']" routerLinkActive="active" (click)="onCollapse()">Data</a></li>
         <li class="nav-item"><a class="nav-link" routerLink="['dashboard']" routerLinkActive="active" (click)="onCollapse()">{{ currentUserFullName }}</a></li>
+        -->
         <li ngbDropdown class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="javascript:void(0)" id="navbarDropdown" ngbDropdownToggle role="button"  aria-haspopup="true" aria-expanded="false">
-            Dropdown
+            Go To
           </a>
           <div ngbDropdownMenu aria-labelledby="navbarDropdown">
-            <a class="dropdown-item" href="javascript:void(0)">Action</a>
-            <a class="dropdown-item" href="javascript:void(0)">Another action</a>
+            <a class="dropdown-item" routerLink="finance/journalentries" routerLinkActive="active" >Finance</a>                       
             <div class="dropdown-divider"></div>
-            <a class="dropdown-item" href="javascript:void(0)">Something else here</a>
+              <a class="dropdown-item" routerLink="dashboard" routerLinkActive="active" >Dashboard</a>
           </div>
         </li>
 
+        <!--
         <li class="nav-item">
           <form class="form-inline my-2 my-lg-0">
             <input class="form-control mr-sm-2 ml-2" type="search" placeholder="Search" aria-label="Search">
             <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
           </form>
         </li>
+        -->
         <!-- <div ngbDropdown class="d-inline-block">
           <button class="btn btn-outline-primary" id="dropdownBasic1" ngbDropdownToggle>Toggle dropdown</button>
           <div ngbDropdownMenu aria-labelledby="dropdownBasic1">

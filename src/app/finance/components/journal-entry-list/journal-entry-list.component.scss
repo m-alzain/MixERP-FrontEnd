@@ -1,0 +1,27 @@
+mat-card-title,      
+mat-card-footer {
+display: flex;
+justify-content: left;
+}
+
+mat-card-footer {
+color: #ff0000;
+padding: 5px 0;
+}
+
+.mat-form-field, p-calendar {
+min-width: 200px;
+margin-left: 10px;
+margin-right: 10px; // Make room for the spinner
+}
+
+.mat-spinner {
+position: relative;
+top: 10px;
+left: 10px;
+visibility: hidden;
+}
+
+.mat-spinner.show {
+visibility: visible;
+}

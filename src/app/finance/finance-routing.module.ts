@@ -1,12 +1,12 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { FindJournalViewPageComponent,ViewJournalViewPageComponent } from './containers'
+import { FindJournalViewPageComponent,ViewJournalEntryPageComponent } from './containers'
 
 const routes: Routes = [
-  { path: 'journalviews', component: FindJournalViewPageComponent },
+  { path: 'journalentries', component: FindJournalViewPageComponent },
   {
-    path: 'journalviews/:id',
-    component: ViewJournalViewPageComponent,
+    path: 'journalentries/:id',
+    component: ViewJournalEntryPageComponent,
     //canActivate: [BookExistsGuard],
   },
   // {

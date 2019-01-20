@@ -1,0 +1,371 @@
+<b-details    [loading]="loading"
+              [error]="error"
+              [hasDeleteApi]="hasDeleteApi"
+              [viewModel]="journalEntry"
+              (fetchEvent)="search($event)"
+              (saveEvent)="save($event)"
+              (updateEvent)="update($event)"
+              (deleteEvent)="delete($event)"
+           masterCrumb="Journal Entries"           
+           [detailsCrumb]="detailsCrumb"
+           [secondToolbarTemplate]="secondToolbar"          
+           [viewEditTemplate]="editView"
+           [sidebarTemplate]="sidebar">
+
+  </b-details>
+
+
+<!-- Details Crumb -->
+<ng-template #detailsCrumb let-model="model">
+  <span>{{ model?.TransactionCode }}</span>
+</ng-template>
+
+<!-- Second Toolbar -->
+<ng-template #secondToolbar let-model="model" let-isEdit="isEdit">
+  <!-- Submit -->
+  <div class="w-100 d-flex justify-content-between align-items-center">
+    <div class="pt-1 pb-1">
+      <ng-container *ngIf="!isEdit">       
+        <!-- Submit -->
+        <button class="btn btn-primary btn-sm" (click)="onSubmit(model)" *ngIf="isVisibleSubmit(model)">
+          <fa-icon icon="arrow-circle-right"></fa-icon>
+          <span class="d-none d-md-inline">&nbsp;&nbsp;Submit</span>
+        </button>
+
+        <!-- Approve -->
+        <button class="btn btn-success btn-sm" (click)="onApprove(model)" *ngIf="isVisibleApprove(model)">
+          <fa-icon icon="thumbs-up"></fa-icon>
+          <span class="d-none d-md-inline">&nbsp;&nbsp;Approve</span>
+        </button>
+
+        <!-- Reject -->
+        <button class="btn btn-danger btn-sm" (click)="onReject(model)" *ngIf="isVisibleReject(model)">
+          <fa-icon icon="thumbs-down"></fa-icon>
+          <span class="d-none d-md-inline">&nbsp;&nbsp;Reject</span>
+        </button>
+
+        <!-- Post -->
+        <button class="btn btn-primary btn-sm" (click)="onPost(model)" *ngIf="isVisiblePost(model)">
+          <fa-icon icon="clipboard-check"></fa-icon>
+          <span class="d-none d-md-inline">&nbsp;&nbsp;Post</span>
+        </button>
+
+        <!-- Cancel -->
+        <button class="btn btn-light btn-sm text-primary b-white-button" (click)="onCancel(model)" *ngIf="isVisibleCancel(model)">
+          <fa-icon icon="times"></fa-icon>
+          <span class="d-none d-md-inline">&nbsp;&nbsp;Cancel</span>
+        </button>
+
+        <!-- Return -->
+        <button class="btn btn-light btn-sm text-primary b-white-button" (click)="onReturn(model)" *ngIf="isVisibleReturn(model)">
+          <fa-icon icon="undo"></fa-icon>
+          <span class="d-none d-md-inline">&nbsp;&nbsp;Return</span>
+        </button>
+
+        <!-- Un-Reject -->
+        <button class="btn btn-primary btn-sm" (click)="onUnReject(model)" *ngIf="isVisibleUnReject(model)">
+          <fa-icon icon="undo"></fa-icon>
+          <span class="d-none d-md-inline">&nbsp;&nbsp;Un-Reject</span>
+        </button>
+
+        <!-- Un-Cancel -->
+        <button class="btn btn-primary btn-sm" (click)="onUnCancel(model)" *ngIf="isVisibleUnCancel(model)">
+          <fa-icon icon="undo"></fa-icon>
+          <span class="d-none d-md-inline">&nbsp;&nbsp;Un-Cancel</span>
+        </button>
+
+        <!-- Un-Post -->
+        <button class="btn btn-primary btn-sm" (click)="onUnPost(model)" *ngIf="isVisibleUnPost(model)">
+          <fa-icon icon="undo"></fa-icon>
+          <span class="d-none d-md-inline">&nbsp;&nbsp;Un-Post</span>
+        </button>
+      </ng-container>
+    </div>
+
+    <div class="b-flow-chart small d-none d-md-block">
+      <div class="active"><span>Draft</span></div>
+      <div [class.active]="model?.Status === 'Submitted'"><span>Submitted</span></div>
+      <div [class.active]="model?.Status === 'Approved'"><span>Approved</span></div>
+      <div [class.active]="model?.Status === 'Posted'"><span>Posted</span></div>
+      <div class="active" *ngIf="model?.Status === 'Canceled'"><span>Canceled</span></div>
+      <div class="active" *ngIf="model?.Status === 'Rejected'"><span>Rejected</span></div>
+    </div>
+    <div class="small b-lone-state active d-block d-md-none">
+      <span>{{ model?.Status }}</span>
+    </div>
+  </div>
+</ng-template>
+
+<!-- Edit/View Template -->
+<ng-template #editView let-model="model" let-isEdit="isEdit">
+  <!-- Serial (Header) -->
+  <div class="w-100 mb-2 mb-sm-4">
+    <h2 class="col-12 font-weight-normal">{{ model?.TransactionMasterId }}</h2>
+  </div>
+
+  <!-- Date -->
+  <mat-form-field>
+    <input matInput [matDatepicker]="valueDatepicker" placeholder="Value Date" [(ngModel)]="model.ValueDate" name="valueDate">
+    <mat-datepicker-toggle matSuffix [for]="valueDatepicker"></mat-datepicker-toggle>
+    <mat-datepicker #valueDatepicker></mat-datepicker>
+  </mat-form-field> 
+      
+
+  <!-- Account Executive -->
+  <div class="mt-2 mt-lg-1 col-12 col-md-6">
+    <div class="row">
+      <div class="font-weight-bold small col-12 col-lg-4">
+        <span class="b-vertical-align-middle">Key Account Executive</span>
+      </div>
+      <div class="col-12 col-lg-8">
+      {{model?.TransactionCounter }}
+      <!--
+        <a *ngIf="(!isEdit || !isEditableAccountExecutive(model)) && !!model?.AccountExecutive?.Id" [routerLink]="['../../users', model?.AccountExecutive?.Id]">{{model?.AccountExecutive?.FullName}}</a>       
+        <b-details-picker *ngIf="isEdit && isEditableAccountExecutive(model)" [(ngModel)]="model.AccountExecutive" controller="users" [formatter]="userFormatter" required
+                          #accountExecControl="ngModel" [class.is-invalid]="accountExecControl.invalid && accountExecControl.touched">
+        </b-details-picker>
+        -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Manager -->
+  <div class="mt-2 mt-lg-1 col-12 col-md-6">
+    <div class="row">
+      <div class="font-weight-bold small col-12 col-lg-4">
+        <span class="b-vertical-align-middle">Manager</span>
+      </div>
+      <div class="col-12 col-lg-8">
+      {{model?.VerifiedByUserId }}
+      <!--
+        <a *ngIf="(!isEdit || !isEditableManager(model)) && !!model?.Manager?.Id" [routerLink]="['../../users', model?.Manager?.Id]">{{model?.Manager?.FullName}}</a>
+        <b-details-picker *ngIf="isEdit && isEditableManager(model)" [(ngModel)]="model.Manager" controller="users" [formatter]="userFormatter" required
+                          #managerControl="ngModel" [class.is-invalid]="managerControl.invalid && managerControl.touched">
+        </b-details-picker>
+      -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Store -->
+  <div class="mt-2 mt-lg-1 col-12 col-md-6">
+    <div class="row">
+      <div class="font-weight-bold small col-12 col-lg-4">
+        <span class="b-vertical-align-middle">Store</span>
+      </div>
+      <div class="col-12 col-lg-8">
+      {{model?.CascadingTranId }}
+      <!--
+        <a *ngIf="(!isEdit || !isDraft(model)) && !!model?.Store?.Id" [routerLink]="['../../stores', model?.Store?.Id]">{{model?.Store?.Name}}</a>
+        <b-details-picker *ngIf="isEdit && isDraft(model)" [(ngModel)]="model.Store" controller="stores" [formatter]="storeFormatter" required
+                          #storeControl="ngModel" [class.is-invalid]="storeControl.invalid && storeControl.touched">
+        </b-details-picker>
+        -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Reason -->
+  <div class="mt-2 mt-lg-1 col-12 col-md-6">
+    <div class="row">
+      <div class="font-weight-bold small col-12 col-lg-4">
+        <span class="b-vertical-align-middle">Reason</span>
+      </div>
+      <div class="col-12 col-lg-8">
+      Reason
+      <!--
+        <div *ngIf="!isEdit || !isDraft(model)">{{ reasonDisplay(model?.Reason) }}</div>
+        <select class="w-100 b-input form-control" *ngIf="isEdit && isDraft(model)" (ngModelChange)="onReasonChange($event, model)" [ngModel]="model.Reason" required
+                #typeControl="ngModel" [class.is-invalid]="typeControl.invalid && typeControl.touched">
+          <option *ngFor="let reason of reasons" value="{{ reason.value }}">{{ reason.display }}</option>
+        </select>
+        -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Comment -->
+  <div class="mt-2 mt-lg-1 col-12 col-md-6">
+    <div class="row">
+      <div class="font-weight-bold small col-12 col-lg-4">
+        <span class="b-vertical-align-middle">Comment (Optional)</span>
+      </div>
+      <div class="col-12 col-lg-8">
+        <div *ngIf="(!isEdit || !isDraft(model))">{{ model?.Comment }}</div>
+        <input class="w-100 b-input form-control" *ngIf="isEdit && isDraft(model)" [(ngModel)]="model.Comment"
+               #commentControl="ngModel" [class.is-invalid]="commentControl.invalid && commentControl.touched" />
+      </div>
+    </div>
+  </div>
+
+  <!-- Requested Value -->
+  <div class="mt-2 mt-lg-1 col-12 col-md-6" *ngIf="isVisibleHeaderRequestedValue(model)">
+    <div class="row">
+      <div class="font-weight-bold small col-12 col-lg-4">
+        <span class="b-vertical-align-middle">Requested Value (AED)</span>
+      </div>
+      <div class="col-12 col-lg-8">
+        <div *ngIf="!isEdit || !isEditableHeaderRequestedValue(model)">{{ model.JournalEntryLines[0].AmountInCurrency | number:'1.2-2' }}</div>
+        <b-decimal-editor [leftAlign]="true" *ngIf="isEdit && isEditableHeaderRequestedValue(model)" [(ngModel)]="model.JournalEntryLines[0].AmountInCurrency" required
+                          #requestedValControl="ngModel" [class.is-invalid]="requestedValControl.invalid && requestedValControl.touched">
+
+        </b-decimal-editor>
+      </div>
+    </div>
+  </div>
+
+  <!-- Approved Value -->
+  <div class="mt-2 mt-lg-1 col-12 col-md-6" *ngIf="isVisibleHeaderApprovedValue(model)">
+    <div class="row">
+      <div class="font-weight-bold small col-12 col-lg-4">
+        <span class="b-vertical-align-middle">Approved Value (AED)</span>
+      </div>
+      <div class="col-12 col-lg-8">
+        <div *ngIf="!isEdit || !isEditableHeaderApprovedValue(model)">{{ model.JournalEntryLines[0].AmountInLocalCurrency | number:'1.2-2' }}</div>
+        <b-decimal-editor [leftAlign]="true" *ngIf="isEdit && isEditableHeaderApprovedValue(model)" [(ngModel)]="model.JournalEntryLines[0].AmountInLocalCurrency" required
+                          #approvedValControl="ngModel" [class.is-invalid]="approvedValControl.invalid && approvedValControl.touched">
+
+        </b-decimal-editor>
+      </div>
+    </div>
+  </div>
+
+  <!-- Used Value -->
+  <div class="mt-2 mt-lg-1 col-12 col-md-6" *ngIf="isVisibleHeaderUsedValue(model)">
+    <div class="row">
+      <div class="font-weight-bold small col-12 col-lg-4">
+        <span class="b-vertical-align-middle">Used Value (AED)</span>
+      </div>
+      <div class="col-12 col-lg-8">
+        <div *ngIf="!isEdit || !isEditableHeaderUsedValue(model)">{{ model.JournalEntryLines[0].AmountInLocalCurrency | number:'1.2-2' }}</div>
+        <b-decimal-editor [leftAlign]="true" *ngIf="isEdit && isEditableHeaderUsedValue(model)" [(ngModel)]="model.JournalEntryLines[0].AmountInLocalCurrency" required
+                          #usedValControl="ngModel" [class.is-invalid]="usedValControl.invalid && usedValControl.touched">
+
+        </b-decimal-editor>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="table-responsive pt-4 pt-sm-5 col-12" *ngIf="isVisibleTable(model)">
+    <table class="table table-sm table-striped mb-2 mb-sm-0">
+      <thead class="small thead-light2">
+        <tr>
+          <th style="width:27%">TransactionDetailId</th>
+          <th style="width:13%">TransactionMasterId</th>
+          <th class="text-right">AmountInCurrency</th>
+          <th class="text-right" *ngIf="isVisibleRequestedSupport(model)">AmountInCurrency</th>
+          <th class="text-right" *ngIf="isVisibleRequestedValue(model)">AmountInCurrency</th>
+          <th class="text-right" *ngIf="isVisibleApprovedSupport(model)">AmountInCurrency</th>
+          <th class="text-right" *ngIf="isVisibleApprovedValue(model)">Approved Value</th>
+          <th class="text-right" *ngIf="isVisibleUsedSupport(model)">Used Support</th>
+          <th class="text-right" *ngIf="isVisibleUsedValue(model)">Used Value</th>
+          <th *ngIf="isEdit" width="1px"></th>
+        </tr>
+      </thead>
+      <tbody class="border-bottom">
+        <tr *ngFor="let li of model.JournalEntryLines; let i = index" >
+          <td>
+          {{ li.TransactionDetailId }}
+          <!--
+            <a *ngIf="(!isEdit || !isDraft(model)) && !!li.Product?.Id" [routerLink]="['../../products', li.Product?.Id]">{{ li.Product?.Description }}</a>
+            <b-details-picker *ngIf="isEdit && isDraft(model)" [(ngModel)]="li.Product" name="product_{{i}}" controller="products" [formatter]="productFormatter" required
+                              #productControl="ngModel" [class.is-invalid]="productControl.invalid && productControl.touched"
+                              [focusIf]="(i === model.LineItems.length-1) && !!li.isNew">
+            </b-details-picker>
+            -->
+          </td>
+          <td>
+            <span>{{ li.TransactionMasterId }}</span>
+          </td>
+          <td class="text-right">
+            <span *ngIf="!isEdit || !isDraft(model)">{{ li.AmountInCurrency | number:'1.2-2' }}</span>
+            <span *ngIf="isEdit && isDraft(model)"><b-decimal-editor required [(ngModel)]="li.AmountInCurrency" (ngModelChange)="onQuantityChange(li)"></b-decimal-editor></span>
+          </td>
+
+          <td class="text-right" *ngIf="isVisibleRequestedSupport(model)">
+            <span *ngIf="!isEdit || !isEditableRequestedSupport(model)">{{ li.AmountInCurrency | number:'1.2-2' }}</span>
+            <span *ngIf="isEdit && isEditableRequestedSupport(model)">
+              <b-decimal-editor [(ngModel)]="li.AmountInCurrency" (ngModelChange)="onRequestedSupportChange(li)"></b-decimal-editor>
+            </span>
+          </td>
+
+          <td class="text-right" *ngIf="isVisibleRequestedValue(model)">
+            <span>{{ li.RequestedValue | number:'1.2-2' }}</span>
+          </td>
+
+          <td class="text-right" *ngIf="isVisibleApprovedSupport(model)">
+            <span *ngIf="!isEdit || !isEditableApprovedSupport(model)">{{ li.AmountInCurrency | number:'1.2-2' }}</span>
+            <span *ngIf="isEdit && isEditableApprovedSupport(model)">
+              <b-decimal-editor [(ngModel)]="li.AmountInCurrency" (ngModelChange)="onApprovedSupportChange(li)"></b-decimal-editor>
+            </span>
+          </td>
+
+          <td class="text-right" *ngIf="isVisibleApprovedValue(model)">
+            <span>{{ li.ApprovedValue | number:'1.2-2' }}</span>
+          </td>
+
+          <td class="text-right" *ngIf="isVisibleUsedSupport(model)">
+            <span *ngIf="!isEdit || !isEditableUsedSupport(model)">{{ li.AmountInCurrency | number:'1.2-2' }}</span>
+            <span *ngIf="isEdit && isEditableUsedSupport(model)">
+              <b-decimal-editor [(ngModel)]="li.AmountInCurrency" (ngModelChange)="onUsedSupportChange(li)"></b-decimal-editor>
+            </span>
+          </td>
+
+          <td class="text-right" *ngIf="isVisibleUsedValue(model)">
+            <span>{{ li.AmountInCurrency | number:'1.2-2' }}</span>
+          </td>
+
+          <td *ngIf="isEdit" style="width:1px">
+            <fa-icon class="text-danger b-pointer" icon="trash-alt" (click)="onDeleteLine(i, model)" title="Delete"></fa-icon>
+
+          </td>
+        </tr>
+        <tr *ngIf="!isEdit && model.JournalEntryLines?.length < 1">
+          <td class="font-italic font-weight-light text-muted" colspan="1000">No items to display.</td>
+        </tr>
+        <tr *ngIf="isEdit">
+          <td colspan="1000">&nbsp;<button class="btn btn-link text-primary p-0 border-0" type="button" (focus)="onAddLine(model)" *ngIf="isDraft(model)">Add a line...</button></td>
+        </tr>
+        <tr *ngIf="model.JournalEntryLines?.length < (isEdit ? 1 : 2)">
+          <td colspan="1000">&nbsp;</td>
+        </tr>
+        <tr *ngIf="model.JournalEntryLines?.length < (isEdit ? 2 : 3)">
+          <td colspan="1000">&nbsp;</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</ng-template>
+
+<!-- Sidebar -->
+<ng-template #sidebar let-model="model" let-isEdit="isEdit">
+  <div class="d-flex justify-content-center">
+    <div class="w-100 b-paper">
+    <!--
+
+      <div class="row m-0 pl-1 pl-sm-3 pr-1 pr-sm-3 pt-3 pt-sm-4 pb-3 pb-sm-5">
+        <h6 class="col-12">Generated Credit Notes: </h6>
+        <div class="m-1" style="float:left" *ngFor="let cn of model.GeneratedDocuments; let i = index">
+          <button class="btn btn-primary" [disabled]="cn.State < 0" (click)="onDownloadCreditNote(cn)">
+            <s *ngIf="cn.State < 0">{{ cn.SerialNumber | bSerial:'CN' }}</s>
+            <span *ngIf="cn.State === 0"><fa-icon icon="download"></fa-icon>&nbsp;&nbsp;{{ cn.SerialNumber | bSerial:'CN' }} ({{ cn.Date | date }})</span>
+          </button>
+        </div>
+        <div class="btn m-1" *ngIf="showSpinner">
+          <span>
+            <b-spinner></b-spinner>&nbsp;&nbsp;Downloading...
+          </span>
+        </div>
+        <div class="btn m-1" *ngIf="!model.GeneratedDocuments || model.GeneratedDocuments.length === 0">
+          <span>
+            None
+          </span>
+        </div>
+      </div>
+
+      -->
+    </div>
+  </div>
+
+</ng-template>
