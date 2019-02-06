@@ -19,7 +19,7 @@ export class ApiService {
   }
 
   get<T>(path: string, params: HttpParams = new HttpParams()): Observable<any> {
-    return this.http.get<T>(`${environment.api_url}${path}`, { params })
+    return this.http.get<T>(`${environment.apiRoot}${path}`, { params })
       .pipe(
         catchError((error) => {
             const friendlyError = friendly(error);
@@ -30,7 +30,7 @@ export class ApiService {
 
   put(path: string, body: Object = {}): Observable<any> {
     return this.http.put(
-      `${environment.api_url}${path}`,
+      `${environment.apiRoot}${path}`,
       JSON.stringify(body)
     ).pipe(
         catchError((error) => {
@@ -47,7 +47,7 @@ export class ApiService {
       })
     };  
     return this.http.post<T>(
-      `${environment.api_url}${path}`,
+      `${environment.apiRoot}${path}`,
       JSON.stringify(body),httpOptions
     ).pipe(
         catchError((error) => {
@@ -59,7 +59,7 @@ export class ApiService {
 
   delete(path): Observable<any> {
     return this.http.delete(
-      `${environment.api_url}${path}`
+      `${environment.apiRoot}${path}`
     ).pipe(
         catchError((error) => {
             const friendlyError = friendly(error);

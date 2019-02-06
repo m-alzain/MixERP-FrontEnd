@@ -4,22 +4,16 @@
 
 export const environment = {
   production: false,
-  api_url:'https://localhost:44365/',
-  Configuration: {
-    //apiRoot: 'https://securingangularappscourse-api.azurewebsites.net/api/',  
-    //public static stsAuthority = "https://securingangularappscourse-sts.azurewebsites.net/";
-    stsAuthority: "http://localhost:5000/",
-  
-    // public static apiRoot = 'http://localhost:2112/api/';
-    // public static stsAuthority = 'http://localhost:4242/';
-  
-    //public static stsAuthority = 'https://softinsight.auth0.com/';
-  
-    // public static clientId = 'spa-client';
+  apiRoot:'https://localhost:44365/',
+  Configuration: {   
+    stsAuthority: "http://localhost:5000/", 
     clientId: 'angularclient',
-    //public static clientId = 'FVZYzaiuyFYR4bxPTtSriqNLgAE69Btn'; //softinsight
-  
-    clientRoot: 'http://localhost:4200/'
+    clientRoot: 'http://localhost:4200/',
+    scope: 'openid profile',
+    response_type: 'id_token token',
+    popup_redirect_uri: 'http://localhost:4200/auth-callback',
+    post_logout_redirect_uri: 'http://localhost:4200/logout-callback',
+    silent_redirect_uri: 'http://localhost:4200/assets/silent-redirect.html'
   }
 };
 

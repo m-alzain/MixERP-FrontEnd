@@ -51,6 +51,7 @@ import { SharedModule } from './shared'
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent, NotFoundPageComponent } from './components';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { AuthModule } from './auth/auth.module';
 
 @NgModule({
   declarations: [
@@ -60,6 +61,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
+
+    AuthModule,
 
     MaterialModule,
 

@@ -2,6 +2,13 @@ import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 
 import {MenuItem} from 'primeng/api';
+import { Observable } from 'rxjs';
+import { Store, select } from '@ngrx/store';
+
+import * as fromRoot from 'src/app/reducers'
+import * as fromAuth from 'src/app/auth/reducers'
+import { MatDialog } from '@angular/material';
+import { AuthService } from '../auth/services/auth.service';
 
 
 @Component({
@@ -11,64 +18,33 @@ import {MenuItem} from 'primeng/api';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnInit {
+  loggedIn$: Observable<boolean>;
 
+  //userProfile: UserProfile;
   firstLogin = false;
 
-  constructor(    
+  constructor(
+    private store: Store<fromRoot.State>,
+    public dialog: MatDialog,
+    private _authService: AuthService,
     private _router: Router
-    ) {   
+    ) {
+    /**
+     * Selectors can be applied with the `select` operator which passes the state
+     * tree to the provided selector
+     */
+    this.loggedIn$ = this.store.pipe(select(fromAuth.getLoggedIn));
     
   }
-
-
-  toggleSidenav( close:boolean = true ){
     
-  }
-  
-  login() {
-    //this._authService.login();
-  }
-
-  logout() {
-    //this._authService.logout();
-  }
-
-  isLoggedIn() {
-    //return this._authService.isLoggedIn();
-    return true;
-  }
 
   isAdmin() {
     return true;
     //return this._authService.authContext && this._authService.authContext.claims && (this._authService.authContext.claims.find(c => c.type === 'http://schemas.microsoft.com/ws/2008/06/identity/claims/role' && c.value === 'Admin'));
   }
-  // ngOnInit() {
-  //   // if (window.location.href.indexOf('?postLogout=true') > 0) {
-  //   //   this._authService.signoutRedirectCallback().then(() => {
-  //   //     let url: string = this._router.url.substring(
-  //   //       0,
-  //   //       this._router.url.indexOf('?')
-  //   //     );
-  //   //     this._router.navigateByUrl(url);
-  //   //   });
-  //   // }
-  // }
-
-  items: MenuItem[];
-
+  
   ngOnInit() {
-      this.items = [{
-          label: 'Finance',
-          items: [
-              {label: 'Journal Entries', icon: 'pi pi-fw pi-plus'},
-          ]
-      },
-      {
-          label: 'Dashboard',
-          items: [
-              {label: 'Dashboard', icon: 'pi pi-fw pi-user-plus'},
-          ]
-      }];
+      
   }
 
   ///////////////////////////////////////// From BSharpUnilever
@@ -83,8 +59,11 @@ export class AppComponent implements OnInit {
     this.isCollapsed = true;
   }
 
-  onSignOut() {
-    //this.auth.signOutAndChallengeUser();
+  onLogOut() {
+    this._authService.logout();
+  }
+  onLogIn() {
+    this._authService.login();
   }
 
   get currentUserFullName() {
