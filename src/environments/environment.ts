@@ -9,7 +9,7 @@ export const environment = {
     stsAuthority: "http://localhost:5000/", 
     clientId: 'angularclient',
     clientRoot: 'http://localhost:4200/',
-    scope: 'openid profile',
+    scope: 'openid profile api1',
     response_type: 'id_token token',
     popup_redirect_uri: 'http://localhost:4200/auth-callback',
     post_logout_redirect_uri: 'http://localhost:4200/logout-callback',

@@ -34,6 +34,7 @@ export class AuthService {
       if (user && !user.expired) {
         this._user = user;
         this.loadSecurityContext();
+
       }
     });
     this._userManager.events.addUserLoaded(args => {
@@ -49,6 +50,8 @@ export class AuthService {
       this._user = user;
       this.store.dispatch(new LoginSuccess({user}));
       console.log('Login sucess has been dispatched');
+      console.log(this.getAuthorizationHeaderValue());
+      
     });
   }
 
