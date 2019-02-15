@@ -7,19 +7,32 @@ import { throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
 import { friendly } from './../utilities';
+import { Store, select } from '@ngrx/store';
+import * as fromRoot from 'src/app/reducers';
+import * as fromAuth from 'src/app/auth/reducers';
 
 @Injectable()
 export class ApiService {
+  authorizationHeaderValue: string;
+  authorizationHeaderValue$ : Observable<string>;
   constructor(
-    private http: HttpClient
-  ) {}
-
-  private formatErrors(error: any) {
-    return  throwError(error.error);
+    private http: HttpClient, private store: Store<fromRoot.State>
+  ) {
+    this.authorizationHeaderValue$ = store.pipe(select(fromAuth.getAuthorizationHeaderValue));
+    this.authorizationHeaderValue$.subscribe(a => this.authorizationHeaderValue = a);
   }
-
+  
   get<T>(path: string, params: HttpParams = new HttpParams()): Observable<any> {
-    return this.http.get<T>(`${environment.apiRoot}${path}`, { params })
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type':  'application/json',
+        'Authorization': this.authorizationHeaderValue
+      }
+     ),
+     params: params
+    };  
+    console.log('from api service',  this.authorizationHeaderValue );
+    return this.http.get<T>(`${environment.apiRoot}${path}`, httpOptions)
       .pipe(
         catchError((error) => {
             const friendlyError = friendly(error);
@@ -43,7 +56,8 @@ export class ApiService {
   post<T>(path: string, body: Object = {}): Observable<any> { 
     const httpOptions = {
       headers: new HttpHeaders({
-        'Content-Type':  'application/json'
+        'Content-Type':  'application/json',
+        'Authorization': this.authorizationHeaderValue
       })
     };  
     return this.http.post<T>(

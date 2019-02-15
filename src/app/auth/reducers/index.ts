@@ -6,28 +6,53 @@ import {
   import * as fromRoot from './../../reducers';
   import * as fromAuth from './auth.reducer';
   import { AuthActionsUnion } from 'src/app/auth/actions';
+import { AccessType } from '../models';
   
   export interface AuthState {
-    status: fromAuth.state;
+    IdentityUserState: fromAuth.IdentityUserState;
+    AuthContextState: fromAuth.AuthContextState;
+    EntityTypeState: fromAuth.EntityTypeState;
   }
   
   export interface State extends fromRoot.State {
-    auth: fromAuth.state;
+    auth: AuthState;
   }
   
   export const reducers: ActionReducerMap<
     AuthState,
     AuthActionsUnion
   > = {
-    status: fromAuth.reducer,
+    IdentityUserState: fromAuth.identityUserReducer,
+    AuthContextState: fromAuth.authContextReducer,
+    EntityTypeState: fromAuth.entityTypeReducer,
   };
   
   export const selectAuthState = createFeatureSelector<State, AuthState>('auth');
   
-  export const selectAuthStatusState = createSelector(
-    selectAuthState,
-    (state: AuthState) => state.status
+  export const selectIdentityUserState = createSelector( selectAuthState,(state: AuthState) => state.IdentityUserState);
+  export const getIdentityUser = createSelector(selectIdentityUserState, fromAuth.getIdentityUser);
+  export const getLoggedIn = createSelector(getIdentityUser, user => !!user &&user.access_token && !user.expired);
+  export const getAuthorizationHeaderValue = createSelector(getIdentityUser, user => !!user && `${user.token_type} ${user.access_token}`);
+//----------
+  export const selectAuthContextState = createSelector(selectAuthState, (state: AuthState) => state.AuthContextState);
+  export const getAuthContext = createSelector(selectAuthContextState, fromAuth.getAuthContex);
+  export const getAuthContextLoading = createSelector(selectAuthContextState,fromAuth.getAuthContextLoading);
+  export const getSelectedOfficeId = createSelector(selectAuthContextState,fromAuth.getSelectedOfficeId);
+  export const getSelectedOfficRole = createSelector(getAuthContext, getSelectedOfficeId,(authContext, officeId) => {
+      return authContext.Roles.find( r => r.OfficeId == officeId);
+    }
   );
-  export const getUser = createSelector(selectAuthStatusState, fromAuth.getUser);
-  export const getLoggedIn = createSelector(getUser, user => !!user &&user.access_token && !user.expired);
-  
+
+  export const getSelectedEntityTypeId = createSelector(selectAuthContextState,fromAuth.getSelectedEntityTypeId);
+  export const getSelectedEntityTypePolicy = createSelector(getSelectedOfficRole,getSelectedEntityTypeId,(role,entityTypeid) => {
+      if(role.IsAdministrator)
+      {
+        return AccessType.VERIFY;
+      }
+      return role.GroupEntityAccessPolicies.find(p => p.EntityTypeId == entityTypeid).AccessType;
+    }
+  );
+  //----------
+  export const selectEntityTypeState = createSelector( selectAuthState,(state: AuthState) => state.EntityTypeState);
+  export const getEntityTypes = createSelector(selectEntityTypeState, fromAuth.getEntityTypes);
+  export const getEntityTypeLoading = createSelector(selectEntityTypeState, fromAuth.getEntityTypeLoading);

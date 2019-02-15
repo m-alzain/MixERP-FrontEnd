@@ -1,22 +1,19 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { catchError } from 'rxjs/operators';
 import { UserManager, User, WebStorageStateStore, Log } from 'oidc-client';
 import { environment } from './../../../environments/environment';
-import { AuthContext } from './../models/auth-context';
+import { UserDto } from 'src/app/auth/models';
 import * as fromRoot from 'src/app/reducers';
 import { Store } from '@ngrx/store';
-import { LoginSuccess, LogoutSuccess } from 'src/app/auth/actions';
-import { Utils } from 'src/app/shared/utilities'
-
+import { LoginSuccess, LogoutSuccess, GetAuthContext, GetEntityType } from 'src/app/auth/actions';
 
 @Injectable()
 export class AuthService {
   private _userManager: UserManager;
   private _user: User;
-  authContext: AuthContext;
+  authContext: UserDto;
 
-  constructor(private store: Store<fromRoot.State>, private httpClient: HttpClient) {
+  constructor(private store: Store<fromRoot.State>) {
     Log.logger = console;
     var config = {
       authority: environment.Configuration.stsAuthority,
@@ -48,70 +45,40 @@ export class AuthService {
   login(): Promise<any> {
     return this._userManager.signinPopup().then(user => {
       this._user = user;
-      this.store.dispatch(new LoginSuccess({user}));
-      console.log('Login sucess has been dispatched');
-      console.log(this.getAuthorizationHeaderValue());
-      
+      this.store.dispatch(new LoginSuccess({user}));     
     });
   }
 
   logout(): Promise<any> {
     return this._userManager.signoutPopup().then( ()=> {
-        this.store.dispatch(new LogoutSuccess());
-        console.log('Logout has been dispatched');
+        this.store.dispatch(new LogoutSuccess());      
     });
   }
 
-  isLoggedIn(): boolean {
-    return this._user && this._user.access_token && !this._user.expired;
-  }
-
-  getAccessToken(): string {
-    return this._user ? this._user.access_token : '';
-  }
 
   signoutRedirectCallback(): Promise<any> {
     return this._userManager.signoutRedirectCallback();
   }
 
   loadSecurityContext() {
-    this.httpClient.get<AuthContext>(`${environment.apiRoot}Account/AuthContext`).subscribe(context => {
-      this.authContext = context;
-    }, error => console.error(Utils.formatError(error)));
+    this.store.dispatch(new GetAuthContext());
+    this.store.dispatch(new GetEntityType());
   }
 
-  // we are using login() instead
-  // startAuthentication(): Promise<void> {
-  //   return this._userManager.signinRedirect();
-  // }
-
-  // completeAuthentication(): Promise<void> {
-  //     return this._userManager.signinRedirectCallback().then(user => {
-  //         this._user = user;
-  //     });
-  // }
-
-  getAuthorizationHeaderValue(): string {
-    return `${this._user.token_type} ${this._user.access_token}`;
-  }
 
   getClaims(): any {
     return this._user.profile;
   }
 
-  completeAuthentication(): Promise<void> {
+  completeAuthentication(): Promise<void> {  // has not been called, although it should
     return this._userManager.signinPopupCallback().then(user => {
-        this._user = user;
-        this.store.dispatch(new LoginSuccess(user));
-        console.log('Login sucess has been dispatched');
+        this._user = user;        
     });
   }
 
 
-  completeSignout(): Promise<void> {
-        return this._userManager.signoutPopupCallback().then( ()=> {
-        this.store.dispatch(new LogoutSuccess());
-        console.log('Logout has been dispatched');
+  completeSignout(): Promise<void> { // has not been called, although it should
+        return this._userManager.signoutPopupCallback().then( ()=> {             
     });
   }
 }

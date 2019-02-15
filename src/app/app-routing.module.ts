@@ -13,6 +13,10 @@ const routes: Routes = [
     path: 'finance',
     loadChildren: './finance/finance.module#FinanceModule',   
   },
+  {
+    path: 'account',
+    loadChildren: './account/account.module#AccountModule',   
+  },
   { path: '**', component: NotFoundPageComponent },
 ];
 
