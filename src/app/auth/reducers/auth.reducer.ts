@@ -1,6 +1,6 @@
 import { AuthActionsUnion , AuthActionTypes} from 'src/app/auth/actions';
 import { User } from 'oidc-client';
-import { UserDto, EntityTypeDto } from '../models';
+import { UserDto, EntityTypeDto } from 'src/app/shared/models';
 
 export interface IdentityUserState {
   user: User | null;

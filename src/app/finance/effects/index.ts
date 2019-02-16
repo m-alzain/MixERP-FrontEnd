@@ -1,1 +1,1 @@
-export * from 'src/app/finance/effects/journal-view.effects';
+export * from 'src/app/finance/effects/journal-entry.effects';

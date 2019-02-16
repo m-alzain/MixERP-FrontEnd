@@ -6,7 +6,7 @@ import {
   import * as fromRoot from './../../reducers';
   import * as fromAuth from './auth.reducer';
   import { AuthActionsUnion } from 'src/app/auth/actions';
-import { AccessType } from '../models';
+import { AccessType } from 'src/app/shared/models';
   
   export interface AuthState {
     IdentityUserState: fromAuth.IdentityUserState;

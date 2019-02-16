@@ -1,10 +1,9 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-
-import { DashboardComponent } from './components/dashboard.component';
+import { FindTenantPageComponent } from './containers/find-tenant-page.component';
 
 const routes: Routes = [
-  { path: '', component: DashboardComponent/*, children: DashboardRoutes */},
+  { path: '', component: FindTenantPageComponent },
 ];
 
 @NgModule({

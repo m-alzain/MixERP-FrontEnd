@@ -14,7 +14,7 @@ import {
 
 import { ApiService } from 'src/app/shared/services/api.services';
 import { GetAuthContext, AuthActionTypes, GetAuthContextSuccess, GetAuthContextFailure, GetEntityType, GetEntityTypeSuccess, GetEntityTypeFailure } from '../actions';
-import { UserDto, EntityTypeDto } from '../models';
+import { UserDto, EntityTypeDto } from 'src/app/shared/models';
 /**
  * Effects offer a way to isolate and easily test side-effects within your
  * application.

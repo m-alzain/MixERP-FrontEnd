@@ -1,10 +1,4 @@
-export interface JournalView{
-    transactionMasterId : number;
-}
 
-export interface JournalEntryQuery {}
-export interface JournalViewQuery {}
-// V2
 export class JournalEntryDto
 {
     TransactionMasterId: number;

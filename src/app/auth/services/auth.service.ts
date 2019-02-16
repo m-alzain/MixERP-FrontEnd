@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { UserManager, User, WebStorageStateStore, Log } from 'oidc-client';
 import { environment } from './../../../environments/environment';
-import { UserDto } from 'src/app/auth/models';
+import { UserDto } from 'src/app/shared/models';
 import * as fromRoot from 'src/app/reducers';
 import { Store } from '@ngrx/store';
 import { LoginSuccess, LogoutSuccess, GetAuthContext, GetEntityType } from 'src/app/auth/actions';

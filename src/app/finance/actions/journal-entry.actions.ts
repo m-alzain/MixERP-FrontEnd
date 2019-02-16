@@ -1,5 +1,5 @@
 import { Action } from '@ngrx/store';
-import { JournalEntryQuery, JournalEntryDto } from 'src/app/finance/models';
+import { JournalEntryDto } from 'src/app/finance/models';
 import { EntryState, EntryQuery } from 'src/app/shared/models';
 
 export enum JournalEntryActionTypes {

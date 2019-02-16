@@ -4,7 +4,6 @@ import { CommonModule } from '@angular/common';
 import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
 import { reducers } from 'src/app/finance/reducers';
-import { JournalViewEffects } from 'src/app/finance/effects';
 
 import { SharedModule } from './../shared'
 
@@ -39,7 +38,7 @@ import { JournalEntryEffects } from './effects/journal-entry.effects';
      * All Effects will only be instantiated once regardless of
      * whether they are registered once or multiple times.
      */
-    EffectsModule.forFeature([JournalViewEffects, JournalEntryEffects]),
+    EffectsModule.forFeature([JournalEntryEffects]),
   ]
 })
 export class FinanceModule { }

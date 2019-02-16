@@ -3,15 +3,31 @@ import { CommonModule } from '@angular/common';
 
 import { DashboardRoutingModule } from './dashboard-routing.module';
 
-import { DashboardComponent } from './components/dashboard.component';
+import { ComponentsModule } from './components';
+
+import { StoreModule } from '@ngrx/store';
+import { reducers } from 'src/app/dashboard/reducers';
+import { EffectsModule } from '@ngrx/effects';
+import { TenantEffects } from './effects/tenant.effects';
+import { FindTenantPageComponent } from './containers/find-tenant-page.component';
+import { SharedModule } from '../shared';
+
 
 @NgModule({
   declarations: [
-    DashboardComponent
+    FindTenantPageComponent
   ],
   imports: [
     CommonModule,
-    DashboardRoutingModule
+    DashboardRoutingModule,
+
+    ComponentsModule,
+
+    SharedModule,
+    
+    StoreModule.forFeature('dashboard', reducers),
+
+    EffectsModule.forFeature([TenantEffects]),
   ]
 })
 export class DashboardModule { }

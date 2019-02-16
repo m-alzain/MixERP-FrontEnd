@@ -1,6 +1,6 @@
 import { Action } from '@ngrx/store';
 import { User } from 'oidc-client';
-import { UserDto, EntityTypeDto } from '../models';
+import { UserDto, EntityTypeDto } from 'src/app/shared/models';
 
 export enum AuthActionTypes {
   LoginSuccess = '[Auth] Login Success',

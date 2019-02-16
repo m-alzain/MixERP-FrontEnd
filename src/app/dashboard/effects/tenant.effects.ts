@@ -11,10 +11,10 @@ import {
   takeUntil,
 } from 'rxjs/operators';
 
-//import { GoogleBooksService } from '@example-app/core/services/google-books.service';
-import { JournalViewsApiActions, FindJournalViewPageActions } from '../actions';
-import { JournalView } from '../models';
+
 import { ApiService } from 'src/app/shared/services/api.services';
+import { TenantDto } from 'src/app/shared/models';
+import { GetTenant, TenantActionTypes, GetTenantSuccess, GetTenantFailure } from '../actions';
 /**
  * Effects offer a way to isolate and easily test side-effects within your
  * application.
@@ -27,31 +27,25 @@ import { ApiService } from 'src/app/shared/services/api.services';
  */
 
 @Injectable()
-export class JournalViewEffects {
+export class TenantEffects {
   @Effect()
-  search$ = ({ debounce = 300, scheduler = asyncScheduler } = {}): Observable<
+  GetTenant$ = ({ debounce = 300, scheduler = asyncScheduler } = {}): Observable<
     Action
   > =>
     this.actions$.pipe(
-      ofType<FindJournalViewPageActions.SearchJournalViews>(
-        FindJournalViewPageActions.FindJournalViewPageActionTypes.SearchJournalViews
+      ofType<GetTenant>(
+        TenantActionTypes.GetTenant
       ),
       debounceTime(debounce, scheduler),
-      map(action => action.payload),
-      switchMap(query => {
-        if (query == null) {
-          return empty;
-        }
-
+      switchMap(() => {       
         const nextSearch$ = this.actions$.pipe(
-          ofType(FindJournalViewPageActions.FindJournalViewPageActionTypes.SearchJournalViews),
+          ofType(TenantActionTypes.GetTenant),
           skip(1)
-        );
-
-        return this.apiSerivce.post<JournalView>('dashboard/finance/tasks/journal/view',query).pipe(
+        );      
+        return this.apiSerivce.get<TenantDto>('account/user/tenants').pipe(
           takeUntil(nextSearch$),
-          map((journalViews: JournalView[]) => new JournalViewsApiActions.JournalViewSearchSuccess(journalViews)),
-          catchError(err => of(new JournalViewsApiActions.JournalViewSearchFailure(err)))
+          map((tenants: TenantDto[]) => new GetTenantSuccess(tenants)),
+          catchError(err => of(new GetTenantFailure(err)))
         );
       })
     );
