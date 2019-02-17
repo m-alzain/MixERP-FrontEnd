@@ -16,16 +16,24 @@
         <li class="nav-item" *ngIf="canViewData"><a class="nav-link" routerLink="['dashboard']" routerLinkActive="active" (click)="onCollapse()">Data</a></li>
         <li class="nav-item"><a class="nav-link" routerLink="['dashboard']" routerLinkActive="active" (click)="onCollapse()">{{ currentUserFullName }}</a></li>
         -->
-        <li ngbDropdown class="nav-item dropdown">
+        <li *ngIf="(loggedIn$ | async) && (selectedOfficeId$ | async) " ngbDropdown class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="javascript:void(0)" id="navbarDropdown" ngbDropdownToggle role="button"  aria-haspopup="true" aria-expanded="false">
             Go To
           </a>
           <div ngbDropdownMenu aria-labelledby="navbarDropdown">
-            <a class="dropdown-item" routerLink="finance/journalentries" routerLinkActive="active" >Finance</a>                       
-            <div class="dropdown-divider"></div>
-              <a class="dropdown-item" routerLink="dashboard" routerLinkActive="active" >Dashboard</a>
+              <a *ngFor="let entity of entityTypeDtos$ | async" class="dropdown-item" (click)="onSelectEntityType(entity)" routerLinkActive="active" >{{entity.EntityName}}</a>
           </div>
         </li>
+
+        <li *ngIf="(loggedIn$ | async) && (selectedOfficeId$ | async) " ngbDropdown class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="javascript:void(0)" id="navbarDropdown" ngbDropdownToggle role="button"  aria-haspopup="true" aria-expanded="false">
+              Choose an Office
+            </a>
+            <div ngbDropdownMenu aria-labelledby="navbarDropdown">
+                <a *ngFor="let office of offices$ | async" class="dropdown-item" (click)="onSelectOffice(office.Id)" routerLinkActive="active" >{{office.OfficeName}}</a>
+            </div>
+          </li>
+     
 
         <!--
         <li class="nav-item">
@@ -46,11 +54,18 @@
 
       </ol>     
       <ol class="nav navbar-nav">
+          <li class="nav-item">
+              <span>              
+                <a class="nav-link" *ngIf="!(loggedIn$ | async)" href="javascript:void(0)" (click)="onLogIn()">
+                    <fa-icon icon="user-plus"></fa-icon>&nbsp;&nbsp;Sign Up
+                  </a>               
+              </span>         
+          </li>
         <li class="nav-item">
             <span>
               <a  class="nav-link" *ngIf="loggedIn$ | async" href="javascript:void(0)" (click)="onLogOut()">
                 <fa-icon icon="sign-out-alt"></fa-icon>&nbsp;&nbsp;Log Out
-              </a>
+              </a>             
               <a class="nav-link" *ngIf="!(loggedIn$ | async)" href="javascript:void(0)" (click)="onLogIn()">
                 <fa-icon icon="sign-in-alt"></fa-icon>&nbsp;&nbsp;Log In
               </a>

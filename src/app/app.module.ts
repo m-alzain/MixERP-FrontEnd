@@ -8,6 +8,7 @@ import {
   faSpinner,
   faSignInAlt,
   faSignOutAlt,
+  faUserPlus,
   faKey,
   faCheck,
   faPlus,
@@ -29,7 +30,7 @@ import {
   faClipboardCheck
 } from '@fortawesome/free-solid-svg-icons';
 library.add(
-  faExclamationTriangle, faSpinner, faSignInAlt, faSignOutAlt,
+  faExclamationTriangle, faSpinner, faSignInAlt, faSignOutAlt, faUserPlus,
   faKey, faCheck, faPlus, faSyncAlt, faAngleDoubleLeft,
   faAngleLeft, faAngleRight, faThLarge, faList, faEdit, faTrashAlt,
   faSave, faTimes, faDownload, faArrowCircleRight, faThumbsUp, faThumbsDown,
@@ -52,11 +53,13 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent, NotFoundPageComponent } from './components';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AuthModule } from './auth/auth.module';
+import { WelcomeComponent } from './components/welcome/welcome.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    NotFoundPageComponent,   
+    NotFoundPageComponent,
+    WelcomeComponent,   
   ],
   imports: [
     BrowserModule,

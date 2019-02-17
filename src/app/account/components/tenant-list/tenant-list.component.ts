@@ -1,9 +1,9 @@
-import { Component, OnInit, Input, Output } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { TenantDto } from 'src/app/shared/models';
-import { EventEmitter } from 'protractor';
+
 
 @Component({
-  selector: 'dashboard-tenant-list',
+  selector: 'account-tenant-list',
   templateUrl: './tenant-list.component.html',
   styleUrls: ['./tenant-list.component.scss']
 })

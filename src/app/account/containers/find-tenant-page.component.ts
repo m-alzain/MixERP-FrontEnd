@@ -3,20 +3,20 @@ import { select, Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { take } from 'rxjs/operators';
 import { TenantDto } from 'src/app/shared/models';
-import * as fromDashboard from 'src/app/dashboard/reducers';
+import * as fromAccount from 'src/app/account/reducers';
 import { GetTenant } from '../actions';
 
 @Component({
-  selector: 'dashboard-tenant-page',
+  selector: 'account-tenant-page',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `  
-    <dashboard-tenant-list
+    <account-tenant-list
       [masterData]="tenants$  | async"
       [loading]="loading$  | async"
       [error]="error$  | async"  
       (search)="search()"      
       >
-    </dashboard-tenant-list>
+    </account-tenant-list>
    
   `,
 })
@@ -25,10 +25,10 @@ export class FindTenantPageComponent {
   loading$: Observable<boolean>;
   error$: Observable<string>;
 
-  constructor(private store: Store<fromDashboard.State>) {
-    this.tenants$ = store.pipe(select(fromDashboard.getTenants));
-    this.loading$ = store.pipe(select(fromDashboard.getTenantLoading));
-    this.error$ = store.pipe(select(fromDashboard.getTenantError));
+  constructor(private store: Store<fromAccount.State>) {
+    this.tenants$ = store.pipe(select(fromAccount.getTenants));
+    this.loading$ = store.pipe(select(fromAccount.getTenantLoading));
+    this.error$ = store.pipe(select(fromAccount.getTenantError));
   }
 
   search() {

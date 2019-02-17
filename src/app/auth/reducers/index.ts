@@ -35,7 +35,8 @@ import { AccessType } from 'src/app/shared/models';
   export const getAuthorizationHeaderValue = createSelector(getIdentityUser, user => !!user && `${user.token_type} ${user.access_token}`);
 //----------
   export const selectAuthContextState = createSelector(selectAuthState, (state: AuthState) => state.AuthContextState);
-  export const getAuthContext = createSelector(selectAuthContextState, fromAuth.getAuthContex);
+  export const getAuthContext = createSelector(selectAuthContextState, fromAuth.getAuthContext);
+  export const getOffices = createSelector(getAuthContext,  authContext => authContext.Offices);
   export const getAuthContextLoading = createSelector(selectAuthContextState,fromAuth.getAuthContextLoading);
   export const getSelectedOfficeId = createSelector(selectAuthContextState,fromAuth.getSelectedOfficeId);
   export const getSelectedOfficRole = createSelector(getAuthContext, getSelectedOfficeId,(authContext, officeId) => {
@@ -45,11 +46,16 @@ import { AccessType } from 'src/app/shared/models';
 
   export const getSelectedEntityTypeId = createSelector(selectAuthContextState,fromAuth.getSelectedEntityTypeId);
   export const getSelectedEntityTypePolicy = createSelector(getSelectedOfficRole,getSelectedEntityTypeId,(role,entityTypeid) => {
-      if(role.IsAdministrator)
-      {
-        return AccessType.VERIFY;
+      if(!!role){
+        if(role.IsAdministrator)
+        {
+          return AccessType.VERIFY;
+        }
+        return role.GroupEntityAccessPolicies.find(p => p.EntityTypeId == entityTypeid).AccessType;
+      }else{
+        return -1;
       }
-      return role.GroupEntityAccessPolicies.find(p => p.EntityTypeId == entityTypeid).AccessType;
+      
     }
   );
   //----------

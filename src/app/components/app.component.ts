@@ -9,6 +9,7 @@ import * as fromRoot from 'src/app/reducers'
 import * as fromAuth from 'src/app/auth/reducers'
 import { MatDialog } from '@angular/material';
 import { AuthService } from '../auth/services/auth.service';
+import { OfficeDto, EntityTypeDto } from '../shared/models';
 
 
 @Component({
@@ -19,6 +20,9 @@ import { AuthService } from '../auth/services/auth.service';
 })
 export class AppComponent implements OnInit {
   loggedIn$: Observable<boolean>;
+  selectedOfficeId$: Observable<string>;
+  offices$: Observable<OfficeDto[]>;
+  entityTypeDtos$: Observable<EntityTypeDto[]>;
 
   //userProfile: UserProfile;
   firstLogin = false;
@@ -34,10 +38,20 @@ export class AppComponent implements OnInit {
      * tree to the provided selector
      */
     this.loggedIn$ = this.store.pipe(select(fromAuth.getLoggedIn));
+    this.offices$ = this.store.pipe(select(fromAuth.getOffices));
+    this.selectedOfficeId$ = this.store.pipe(select(fromAuth.getSelectedOfficeId));
+    this.entityTypeDtos$ = this.store.pipe(select(fromAuth.getEntityTypes));
     
   }
     
+  onSelectOffice(officeId: string)
+  {
+    this._authService.onSelectOffice(officeId);
+  }
 
+  onSelectEntityType(entity: EntityTypeDto){
+    this._authService.onSelectEntityType(entity);
+  }
   isAdmin() {
     return true;
     //return this._authService.authContext && this._authService.authContext.claims && (this._authService.authContext.claims.find(c => c.type === 'http://schemas.microsoft.com/ws/2008/06/identity/claims/role' && c.value === 'Admin'));

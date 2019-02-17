@@ -1,4 +1,9 @@
 export class UserDto {
+
+    constructor(){
+      this.Roles = []
+    }
+
     Id : string;
     Email : string;    
     Name : string;
@@ -80,6 +85,10 @@ export class TenantDto
   }
   
   export class RoleDto {
+    constructor(){
+      this.GroupEntityAccessPolicies = []
+    }
+
     OfficeId : string;
     Id : string;
     RoleName : string;

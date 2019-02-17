@@ -3,11 +3,11 @@ import { TenantDto } from 'src/app/shared/models';
 
 export enum TenantActionTypes {
 
-    GetTenant = '[Dashboard/Tenants/API] GetTenant',
-    GetTenantSuccess = '[Dashboard/Tenants/API] GetTenant Success',
-    GetTenantFailure = '[Dashboard/Tenants/API] GetTenant Failure',
+    GetTenant = '[Account/Tenants/API] GetTenant',
+    GetTenantSuccess = '[Account/Tenants/API] GetTenant Success',
+    GetTenantFailure = '[Account/Tenants/API] GetTenant Failure',
 
-    SelectTenant = '[Dashboard Tenant Page] Select Tenant',
+    SelectTenant = '[Account Tenant Page] Select Tenant',
 
     // SaveJournalEntry = '[JournalEntries/API] Save JournalEntry',
     // SaveJournalEntrySuccess = '[JournalEntries/API] Save JournalEntry Success',

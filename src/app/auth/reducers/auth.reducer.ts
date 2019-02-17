@@ -40,16 +40,16 @@ export interface AuthContextState {
   user: UserDto | null;
   loading: boolean;
   error: string;
-  selectedOfficeId ?: string;
-  selectedEntityTypeId ?: string;
+  selectedOfficeId : string;
+  selectedEntityTypeId : string;
 }
 
 export const authContexInitialState: AuthContextState = {
-  user: null,
+  user: new UserDto(),
   loading: false,
   error: '',
-  selectedOfficeId : null,
-  selectedEntityTypeId : null,
+  selectedOfficeId : '',
+  selectedEntityTypeId : '',
 };
 
 export function authContextReducer(
@@ -69,7 +69,9 @@ export function authContextReducer(
       return {
         user: action.payload,
         loading: false,
-        error: ''
+        error: '',
+        selectedOfficeId : '',
+        selectedEntityTypeId : '',
       };
     }
 
@@ -99,7 +101,7 @@ export function authContextReducer(
   }
 }
 
-export const getAuthContex = (state: AuthContextState) => state.user;
+export const getAuthContext = (state: AuthContextState) => state.user;
 export const getAuthContextLoading = (state: AuthContextState) => state.loading;
 export const getSelectedOfficeId = (state: AuthContextState) => state.selectedOfficeId;
 export const getSelectedEntityTypeId = (state: AuthContextState) => state.selectedEntityTypeId;

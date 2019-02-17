@@ -2,10 +2,10 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { UserManager, User, WebStorageStateStore, Log } from 'oidc-client';
 import { environment } from './../../../environments/environment';
-import { UserDto } from 'src/app/shared/models';
+import { UserDto, EntityTypeDto } from 'src/app/shared/models';
 import * as fromRoot from 'src/app/reducers';
 import { Store } from '@ngrx/store';
-import { LoginSuccess, LogoutSuccess, GetAuthContext, GetEntityType } from 'src/app/auth/actions';
+import { LoginSuccess, LogoutSuccess, GetAuthContext, GetEntityType, SelectOffice, SelectEntityType } from 'src/app/auth/actions';
 
 @Injectable()
 export class AuthService {
@@ -80,6 +80,15 @@ export class AuthService {
   completeSignout(): Promise<void> { // has not been called, although it should
         return this._userManager.signoutPopupCallback().then( ()=> {             
     });
+  }
+
+  onSelectOffice(officeId: string)
+  {
+    this.store.dispatch(new SelectOffice(officeId));
+  }
+
+  onSelectEntityType(entity: EntityTypeDto){
+    this.store.dispatch(new SelectEntityType(entity.Id));
   }
 }
 

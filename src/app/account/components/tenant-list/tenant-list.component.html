@@ -1,0 +1,73 @@
+<mat-card>   
+    <mat-card-title class="mb-2">Tenants</mat-card-title>
+      <mat-card-content>                
+        <div class="h-100 d-flex flex-column">
+          <div class="row">        
+            <div class="col-6">
+              <mat-card>   
+                <mat-card-title class="mb-2">Tenants</mat-card-title>
+                <mat-card-content> 
+                  <div class="col-12 p-1 border d-flex justify-content-between b-toolbar">      
+                    <!-- Left Buttons -->
+                    <div>
+                      <!-- Create -->
+                      <button class="btn btn-primary btn-sm" (click)="onTenantCreate()" [disabled]="!canCreateTenant">
+                        <fa-icon icon="plus"></fa-icon>
+                        <span class="d-none d-md-inline ">&nbsp;&nbsp;Create Teannt</span>
+                      </button>
+              
+                      <!-- Refresh -->
+                      <button class="btn btn-light btn-sm text-primary b-white-button" (click)="fetch()">
+                        <fa-icon icon="sync-alt"></fa-icon>
+                        <span class="d-none d-md-inline ">&nbsp;&nbsp;Refresh</span>
+                      </button>
+                    </div>                
+                  </div>
+                  <div class="row b-rest-of-screen bg-light">
+                    <div class="w-100">
+                      <div *ngFor="let model of masterData">
+                        <button class="btn btn-primary btn-sm" mat-button >{{model.TenantName}}</button>
+                      </div>               
+                      <!-- Spinner -->
+                      <div class="w-100 p-2 d-flex justify-content-center" *ngIf="loading">
+                        <b-spinner [scale]="2"></b-spinner>
+                      </div>         
+                      <!-- No items found -->
+                      <!-- <div class="w-100 pl-3 pr-3" *ngIf="showNoItemsFound">No items found.</div> -->          
+                      <!-- Error message -->
+                      <b-error-message *ngIf="error">
+                        {{ error }}
+                      </b-error-message>
+                    </div>
+                  </div>
+                </mat-card-content>                
+              </mat-card>
+            </div>                  
+            <div class="col-6">
+              <mat-card>   
+                <mat-card-title class="mb-2">Offices</mat-card-title>
+                <mat-card-content> 
+                  <div class="col-12 p-1 border d-flex justify-content-between b-toolbar">     
+                    <!-- Left Buttons -->
+                    <div>
+                      <!-- Create -->
+                      <button class="btn btn-primary btn-sm" (click)="onOfficeCreate()" [disabled]="!canCreateOffice">
+                        <fa-icon icon="plus"></fa-icon>
+                        <span class="d-none d-md-inline ">&nbsp;&nbsp;Create Office</span>
+                      </button>
+              
+                      <!-- Refresh -->
+                      <button class="btn btn-light btn-sm text-primary b-white-button" (click)="fetch()">
+                        <fa-icon icon="sync-alt"></fa-icon>
+                        <span class="d-none d-md-inline ">&nbsp;&nbsp;Refresh</span>
+                      </button>
+                    </div>              
+                  </div>
+                </mat-card-content>                
+              </mat-card>
+            </div>
+          </div>  
+        </div>   
+    </mat-card-content>           
+  </mat-card>
+  
