@@ -11,11 +11,11 @@
           </a>
         </li>
         <li class="breadcrumb-item active">
-          <ng-container *ngIf="(!showSpinner); else loading">
+          <ng-container *ngIf="(!showSpinner); else loading2">
             <ng-container *ngTemplateOutlet="detailsCrumb; context: { model: activeModel }">
             </ng-container>
           </ng-container>
-          <ng-template #loading>Loading...</ng-template>
+          <ng-template #loading2>Loading...</ng-template>
         </li>
       </ul>
     </div>
@@ -87,7 +87,7 @@
       </div>
 
       <!-- Spinner -->
-      <div class="mt-3" *ngIf="!!loading">
+      <div class="mt-3" *ngIf="Loading">
         <div class="w-100 p-2 d-flex justify-content-center">
           <b-spinner [scale]="2"></b-spinner>
         </div>

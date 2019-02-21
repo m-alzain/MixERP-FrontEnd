@@ -85,9 +85,9 @@ export function authContextReducer(
     case AuthActionTypes.SelectOffice: {
       return {
           ...state,
-          selectedOfficeId: action.payload,
+          selectedOfficeId: action.payload.Id,
       };
-    }
+    }   
     case AuthActionTypes.SelectEntityType: {
       return {
           ...state,

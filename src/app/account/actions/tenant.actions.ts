@@ -8,14 +8,15 @@ export enum TenantActionTypes {
     GetTenantFailure = '[Account/Tenants/API] GetTenant Failure',
 
     SelectTenant = '[Account Tenant Page] Select Tenant',
+    ClearSelectedTenant = '[Account Tenant Page] Clear Selected Tenant',
 
-    // SaveJournalEntry = '[JournalEntries/API] Save JournalEntry',
-    // SaveJournalEntrySuccess = '[JournalEntries/API] Save JournalEntry Success',
-    // SaveJournalEntryFailure = '[JournalEntries/API] Save JournalEntry Failure',
+    SaveTenant = '[Account/Tenants/API] Save Tenant',
+    SaveTenantSuccess = '[Account/Tenants/API] Save Tenant Success',
+    SaveTenantFailure = '[Account/Tenants/API] Save Tenant Failure',
 
-    // UpdateJournalEntry = '[JournalEntries/API] Update JournalEntry',
-    // UpdateJournalEntrySuccess = '[JournalEntries/API] Update JournalEntry Success',
-    // UpdateJournalEntryFailure = '[JournalEntries/API] Update JournalEntry Failure',
+    UpdateTenant = '[Account/Tenants/API] Update Tenant',
+    UpdateTenantSuccess = '[Account/Tenants/API] Update Tenant Success',
+    UpdateTenantFailure = '[Account/Tenants/API] Update Tenant Failure',
 
     // DeleteJournalEntry = '[JournalEntries/API] Delete JournalEntry',
     // DeleteJournalEntrySuccess = '[JournalEntries/API] Delete JournalEntry Success',
@@ -54,44 +55,48 @@ export class GetTenantFailure implements Action {
 export class SelectTenant implements Action {
     readonly type = TenantActionTypes.SelectTenant;
   
+    constructor(public payload: TenantDto) {}
+}
+
+export class ClearSelectedTenant implements Action {
+    readonly type = TenantActionTypes.ClearSelectedTenant;  
+}
+
+export class SaveTenant implements Action {
+    readonly type = TenantActionTypes.SaveTenant;
+  
+    constructor(public payload: TenantDto) {}
+}
+
+export class SaveTenantSuccess implements Action {
+    readonly type = TenantActionTypes.SaveTenantSuccess;
+
+    constructor(public payload: TenantDto[]) {}
+}
+
+export class SaveTenantFailure implements Action {
+    readonly type = TenantActionTypes.SaveTenantFailure;
+
     constructor(public payload: string) {}
 }
 
-// export class SaveJournalEntry implements Action {
-//     readonly type = JournalEntryActionTypes.SaveJournalEntry;
+export class UpdateTenant implements Action {
+    readonly type = TenantActionTypes.UpdateTenant;
   
-//     constructor(public payload: JournalEntryDto) {}
-// }
+    constructor(public payload: TenantDto) {}
+}
 
-// export class SaveJournalEntrySuccess implements Action {
-//     readonly type = JournalEntryActionTypes.SaveJournalEntrySuccess;
+export class UpdateTenantSuccess implements Action {
+    readonly type = TenantActionTypes.UpdateTenantSuccess;
 
-//     constructor(public payload: JournalEntryDto) {}
-// }
+    constructor(public payload: TenantDto[]) {}
+}
 
-// export class SaveJournalEntryFailure implements Action {
-//     readonly type = JournalEntryActionTypes.SaveJournalEntryFailure;
+export class UpdateTenantFailure implements Action {
+    readonly type = TenantActionTypes.UpdateTenantFailure;
 
-//     constructor(public payload: string) {}
-// }
-
-// export class UpdateJournalEntry implements Action {
-//     readonly type = JournalEntryActionTypes.UpdateJournalEntry;
-  
-//     constructor(public payload: JournalEntryDto) {}
-// }
-
-// export class UpdateJournalEntrySuccess implements Action {
-//     readonly type = JournalEntryActionTypes.UpdateJournalEntrySuccess;
-
-//     constructor(public payload: JournalEntryDto) {}
-// }
-
-// export class UpdateJournalEntryFailure implements Action {
-//     readonly type = JournalEntryActionTypes.UpdateJournalEntryFailure;
-
-//     constructor(public payload: string) {}
-// }
+    constructor(public payload: string) {}
+}
 
 // export class DeleteJournalEntry implements Action {
 //     readonly type = JournalEntryActionTypes.DeleteJournalEntry;
@@ -138,13 +143,13 @@ GetTenant
 |GetTenantFailure
 
 |SelectTenant 
-
-// |SaveJournalEntry
-// |SaveJournalEntrySuccess
-// |SaveJournalEntryFailure
-// |UpdateJournalEntry
-// |UpdateJournalEntrySuccess
-// |UpdateJournalEntryFailure
+|ClearSelectedTenant
+|SaveTenant
+|SaveTenantSuccess
+|SaveTenantFailure
+|UpdateTenant
+|UpdateTenantSuccess
+|UpdateTenantFailure
 // |DeleteJournalEntry
 // |DeleteJournalEntrySuccess
 // |DeleteJournalEntryFailure

@@ -41,10 +41,16 @@ export class ApiService {
       );
   }
 
-  put(path: string, body: Object = {}): Observable<any> {
-    return this.http.put(
+  put<T>(path: string, body: Object = {}): Observable<any> {
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type':  'application/json',
+        'Authorization': this.authorizationHeaderValue
+      })
+    };  
+    return this.http.put<T>(
       `${environment.apiRoot}${path}`,
-      JSON.stringify(body)
+      JSON.stringify(body), httpOptions
     ).pipe(
         catchError((error) => {
             const friendlyError = friendly(error);

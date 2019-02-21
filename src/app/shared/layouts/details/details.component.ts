@@ -1,28 +1,11 @@
-import { Component, OnInit, Input, TemplateRef, ViewChild, OnDestroy, EventEmitter, Output } from '@angular/core';
+import { Component, OnInit, Input, TemplateRef, ViewChild, OnDestroy, EventEmitter, Output, ChangeDetectionStrategy } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { DataService } from '../../services';
 import { Router, ActivatedRoute, ParamMap } from '@angular/router';
 import { Location } from '@angular/common';
-import { Subject, Observable, of } from 'rxjs';
-import { switchMap, catchError, tap, map } from 'rxjs/operators';
 import { cloneModel } from '../../utilities';
 
-// enum DetailsStatus {
-
-//   // The details record is being fetched from the server
-//   //loading = 1,
-
-//   // The last fetch of the details record from the server completed successfully
-//   //loaded = 2,
-
-//   // The last fetch of details record from the server resulted in an error
-//   //error = 3,
-
-//   // The details record is set to be modified or is currently being modified
-//   edit = 4,
-// }
-
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'b-details',
   templateUrl: './details.component.html',
   styleUrls: ['./details.component.scss']
@@ -30,8 +13,7 @@ import { cloneModel } from '../../utilities';
 export class DetailsComponent implements OnInit, OnDestroy {
 
   private id: string; 
-  // private detailsStatus: DetailsStatus;
-  public isEdit: boolean
+  public isEdit: boolean = false;
 
   @ViewChild('errorModal')
   errorModal: TemplateRef<any>;
@@ -68,8 +50,11 @@ export class DetailsComponent implements OnInit, OnDestroy {
   // @Input()
   // enableEditButtonPred: (model: any) => boolean = () => true
 
-  // @Input()
-  // createNew: () => any = () => ({})
+  @Input()
+  createNewPre: () => any = () => ({})
+
+  @Input()
+  createNewModel: () => any 
 
   constructor(
     public modalService: NgbModal,
@@ -82,7 +67,7 @@ export class DetailsComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.route.paramMap.subscribe((params: ParamMap) => {
       this.id = params.get('id');
-      if(this.id == 'new')
+      if(this.id == 'new' && this.canEdit)
       {    
         this.id = null;  
         this.onEdit(); // ready to create new object
@@ -95,38 +80,6 @@ export class DetailsComponent implements OnInit, OnDestroy {
     // this.notifyDestruct$.next();
   }
 
-  // private fetch() {
-  //   // this.notifyFetch$.next();    
-  // }
-
-  // private doFetch(): Observable<void> {
-  //   if (this.id === 'new') {
-  //     // IF it's create new, don't fetch anything
-  //     this._editModel = this.createNew();
-  //     this.detailsStatus = DetailsStatus.edit;
-
-  //     return of();
-  //   } else {
-  //     // ELSE fetch the record from server
-
-  //     this.detailsStatus = DetailsStatus.loading;
-
-  //     return this.data[this.controller].get(this.id, this.notifyDestruct$).pipe(
-  //       tap((result: any) => {
-
-  //         this._viewModel = result;
-  //         this.detailsStatus = DetailsStatus.loaded;
-  //       }),
-  //       catchError((friendlyError) => {
-
-  //         this.detailsStatus = DetailsStatus.error;
-  //         this._errorMessage = friendlyError;
-
-  //         return of(null);
-  //       })
-  //     );
-  //   }
-  // }
 
   public canDeactivate(): boolean {
     if (this.isEdit) {
@@ -157,14 +110,6 @@ export class DetailsComponent implements OnInit, OnDestroy {
     return this._modalErrorMessage;
   }
 
-  // get viewModel() {
-  //   return this._viewModel;
-  // }
-
-  // set viewModel(val: any) {
-  //   this._viewModel = val;
-  // }
-
   get editModel() {
     return this._editModel;
   }
@@ -173,18 +118,10 @@ export class DetailsComponent implements OnInit, OnDestroy {
     return this.isEdit ? this.editModel : this.viewModel;
   }
 
-  // get showSpinner(): boolean {
-  //   return this.detailsStatus === DetailsStatus.loading;
-  // }
-
   get showViewEdit(): boolean {
     // return this.detailsStatus === DetailsStatus.loaded || this.detailsStatus === DetailsStatus.edit;
     return !this.loading || this.isEdit;
   }
-
-  // get isEdit(): boolean {
-  //   return this.detailsStatus === DetailsStatus.edit;
-  // }
 
   get showViewToolbar(): boolean {
     return !this.showEditToolbar;
@@ -199,7 +136,7 @@ export class DetailsComponent implements OnInit, OnDestroy {
   // }
 
   onEdit(): void {
-    if (this.viewModel) {
+    if (!!this.viewModel) {
       // Clone the model (to allow for canceling changes)
       this._editModel = cloneModel(this.viewModel);
 
@@ -214,8 +151,11 @@ export class DetailsComponent implements OnInit, OnDestroy {
   }
 
   onCreate(): void {
+    this.createNewPre();
+    this.viewModel = !!this.createNewModel ? this.createNewModel() : this.viewModel;
+    this._editModel = this.viewModel;
     this.router.navigate(['..', 'new'], { relativeTo: this.route });
-
+    console.log('editmodel = ', this._editModel);
   }
 
   get canCreate(): boolean {
@@ -236,66 +176,31 @@ export class DetailsComponent implements OnInit, OnDestroy {
   //   return !!this.data[this.controller].delete;
   // }
 
-  onRefresh(): void {
-    // if (this.detailsStatus !== DetailsStatus.loading) {
-
-    //   // Clear the cache and fetch again
-    //   this._viewModel = null;
-    //   this.fetch();
-    // }
+  onRefresh(): void {    
     if (!this.loading) {
       this.refreshEvent.emit(this.id);
     }
   }
 
-  onSave(): void {
-    // We need this information for later
+  onSave(): void { 
     const isNew = !(this.id);    
-
-    // Prepare the post observable
-    // this.data[this.controller].post(this.editModel, this.notifyDestruct$).pipe(
-    //   map((result: any) => {
-
-    //     // update the details with the server version
-    //     this._viewModel = result;
-    //     this._editModel = null;
-    //     this._errorMessage = null;
-
-    //     if (isNew) {
-    //       this.detailsStatus = DetailsStatus.loaded;
-    //       this.router.navigate(['..', result.Id], { relativeTo: this.route });
-
-    //     } else {
-    //       this.detailsStatus = DetailsStatus.loaded;
-    //     }
-    //   }),
-    //   catchError(friendlyError => {
-
-    //     // Show the error in a dismissable modal
-    //     this.showModalError(friendlyError);
-    //     return of(null);
-    //   })
-    // ).subscribe();
-
-    if (isNew) {     
+    if (isNew) {   
+      this.viewModel = this._editModel; // so that if there is an error the form data wont be cleared     
       this.saveEvent.emit(this.editModel);      
     } else {    
       this.updateEvent.emit(this.editModel);
     }
-
+    this.isEdit = false;
   }
 
-  get canSave(): boolean {
-    // return !this.data.isSaving;
+  get canSave(): boolean {    
     return !this.loading;
   }
 
-  onCancel(): void {
-    // Remove the edit model
+  onCancel(): void {    
     const isNew = !(this.id);
 
     if (isNew) {
-
       // To avoid null reference errors
       this.viewModel = this._editModel;
 
@@ -307,6 +212,7 @@ export class DetailsComponent implements OnInit, OnDestroy {
 
     } else {
       this._editModel = null;
+      this.isEdit = false;
       // this._errorMessage = null;
 
       // Close the edit form
@@ -315,7 +221,6 @@ export class DetailsComponent implements OnInit, OnDestroy {
   }
 
   get canCancel(): boolean {
-    // return !this.data.isSaving;
     return !this.loading;
   }
 

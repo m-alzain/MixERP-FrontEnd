@@ -23,8 +23,6 @@ export class WelcomeComponent implements OnInit {
   authContext$: Observable<UserDto>;
   offices$: Observable<OfficeDto[]>;
   selectedOfficRole$: Observable<RoleDto>;
-  selectedEntityTypePolicy$: Observable<AccessType>;
-  selectedEntityTypeId$: Observable<string>;
 
   constructor(
     private store: Store<fromRoot.State>,
@@ -38,25 +36,10 @@ export class WelcomeComponent implements OnInit {
      */
     this.loggedIn$ = this.store.pipe(select(fromAuth.getLoggedIn));
     this.authContext$ = this.store.pipe(select(fromAuth.getAuthContext));
-    this.offices$ = this.store.pipe(select(fromAuth.getOffices)); 
+    this.offices$ = this.store.pipe(select(fromAuth.getUserOffices)); 
     this.selectedOfficRole$ = this.store.pipe(select(fromAuth.getSelectedOfficRole));
-    this.selectedEntityTypePolicy$ = this.store.pipe(select(fromAuth.getSelectedEntityTypePolicy)); // getSelectedEntityTypeId
-    this.selectedEntityTypeId$ = this.store.pipe(select(fromAuth.getSelectedEntityTypeId));
-    this.selectedOfficRole$.subscribe( a => 
-      {
-        console.log('role = ',a)
-      }     
-    ); 
-    this.selectedEntityTypePolicy$.subscribe( a => 
-      {
-        console.log('policy = ',a)
-      }     
-    ); 
-    this.selectedEntityTypeId$.subscribe( a => 
-      {
-        console.log('selectedEntityTypeId = ',a)
-      }     
-    );    
+    
+      
   }
       
 
@@ -71,8 +54,8 @@ export class WelcomeComponent implements OnInit {
     this._authService.login();
   }
 
-  onSelectOffice(officeId: string)
+  onSelectOffice(office: OfficeDto)
   {
-    this._authService.onSelectOffice(officeId);
+    this._authService.onSelectOffice(office);
   }
 }

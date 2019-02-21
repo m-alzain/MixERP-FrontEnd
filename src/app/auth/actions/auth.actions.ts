@@ -1,6 +1,6 @@
 import { Action } from '@ngrx/store';
 import { User } from 'oidc-client';
-import { UserDto, EntityTypeDto } from 'src/app/shared/models';
+import { UserDto, EntityTypeDto, OfficeDto, TenantDto } from 'src/app/shared/models';
 
 export enum AuthActionTypes {
   LoginSuccess = '[Auth] Login Success',
@@ -63,8 +63,9 @@ export class GetAuthContextFailure implements Action {
 export class SelectOffice implements Action {
   readonly type = AuthActionTypes.SelectOffice;
 
-  constructor(public payload: string) {}
+  constructor(public payload: OfficeDto) {}
 }
+
 
 export class SelectEntityType implements Action {
   readonly type = AuthActionTypes.SelectEntityType;

@@ -2,10 +2,11 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { UserManager, User, WebStorageStateStore, Log } from 'oidc-client';
 import { environment } from './../../../environments/environment';
-import { UserDto, EntityTypeDto } from 'src/app/shared/models';
+import { UserDto, EntityTypeDto, OfficeDto } from 'src/app/shared/models';
 import * as fromRoot from 'src/app/reducers';
 import { Store } from '@ngrx/store';
 import { LoginSuccess, LogoutSuccess, GetAuthContext, GetEntityType, SelectOffice, SelectEntityType } from 'src/app/auth/actions';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Injectable()
 export class AuthService {
@@ -13,7 +14,7 @@ export class AuthService {
   private _user: User;
   authContext: UserDto;
 
-  constructor(private store: Store<fromRoot.State>) {
+  constructor(private store: Store<fromRoot.State>, private route: ActivatedRoute, private router: Router) {
     Log.logger = console;
     var config = {
       authority: environment.Configuration.stsAuthority,
@@ -51,7 +52,8 @@ export class AuthService {
 
   logout(): Promise<any> {
     return this._userManager.signoutPopup().then( ()=> {
-        this.store.dispatch(new LogoutSuccess());      
+        this.store.dispatch(new LogoutSuccess()); 
+        this.router.navigate(['/welcome']);     
     });
   }
 
@@ -82,13 +84,15 @@ export class AuthService {
     });
   }
 
-  onSelectOffice(officeId: string)
+  onSelectOffice(office: OfficeDto)
   {
-    this.store.dispatch(new SelectOffice(officeId));
+    this.store.dispatch(new SelectOffice(office));
+    this.router.navigate(['/dashboard']);
   }
 
   onSelectEntityType(entity: EntityTypeDto){
     this.store.dispatch(new SelectEntityType(entity.Id));
+    this.router.navigate([entity.Url]);
   }
 }
 

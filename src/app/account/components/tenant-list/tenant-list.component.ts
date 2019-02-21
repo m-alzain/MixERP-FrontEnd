@@ -1,50 +1,78 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { TenantDto } from 'src/app/shared/models';
+
+import { ChangeDetectionStrategy, Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { select, Store } from '@ngrx/store';
+import { Observable } from 'rxjs';
+import { take } from 'rxjs/operators';
+import { TenantDto, OfficeDto } from 'src/app/shared/models';
+import * as fromRoot from 'src/app/reducers';
+import * as fromAccount from 'src/app/account/reducers';
+import * as fromAuth from 'src/app/auth/reducers';
+import { GetTenant, SelectTenant, ClearSelectedTenant } from 'src/app/account/actions';
+import { Router, ActivatedRoute } from '@angular/router';
 
 
 @Component({
   selector: 'account-tenant-list',
+  changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './tenant-list.component.html',
   styleUrls: ['./tenant-list.component.scss']
 })
 export class TenantListComponent implements OnInit {
 
-  @Input() masterData:TenantDto[];
-  @Input() loading: boolean;
-  @Input() error: string;
+  tenants$: Observable<TenantDto[]>; 
+  loading$: Observable<boolean>;
+  error$: Observable<string>;
+  selectedTenantOffices$: Observable<OfficeDto[]>; 
+  isAdmin$: Observable<boolean>;
+  isAdmin: boolean;
 
-  @Output() search = new EventEmitter();
-
-  constructor() {
+  constructor(private store: Store<fromRoot.State>, private router: Router, private route: ActivatedRoute) {
+    this.tenants$ = store.pipe(select(fromAccount.getTenants));
+    this.loading$ = store.pipe(select(fromAccount.getTenantLoading));
+    this.error$ = store.pipe(select(fromAccount.getTenantError));
+    this.selectedTenantOffices$ = store.pipe(select(fromAccount.getSelectedTenantOffices));
+    this.isAdmin$ = store.pipe(select(fromAuth.isAdmin));
+    this.isAdmin$.subscribe(a => this.isAdmin = a);
   }
 
-  ngOnInit() { 
-   
+  ngOnInit(){
+    this.fetch();
   }
+
+  fetch() {
+    this.store.dispatch(new GetTenant());
+  }
+ 
 
   idFun(model : TenantDto){
       return model.Id;
   }   
 
-  fetch() {
-      this.search.emit(null);
-  }
-
   get canCreateTenant() {
-    // return !this.canCreatePred || this.canCreatePred();
+    //return this.isAdmin
     return true;
   }
   get canCreateOffice() {
-    // return !this.canCreatePred || this.canCreatePred();
-    return true;
+    return this.isAdmin
   }
 
   onOfficeCreate(){
 
   }
   onTenantCreate(){
+    // clear the selected tenant
+    this.store.dispatch(new ClearSelectedTenant());
+    this.router.navigate(['.', 'new'], { relativeTo: this.route });
+  }
+  goToDetail(tenant: TenantDto){
+    this.router.navigate(['.', tenant.Id], { relativeTo: this.route });
+  }
+  onSelectTenant(tenant: TenantDto){
+    this.store.dispatch(new SelectTenant(tenant));
+  }
+
+  onSelectOffice(tenant: TenantDto){
     
   }
-  
 
 }

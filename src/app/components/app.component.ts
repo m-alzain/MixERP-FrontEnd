@@ -21,6 +21,7 @@ import { OfficeDto, EntityTypeDto } from '../shared/models';
 export class AppComponent implements OnInit {
   loggedIn$: Observable<boolean>;
   selectedOfficeId$: Observable<string>;
+  selectedEntityTypePolicyAccessType$: Observable<number>;
   offices$: Observable<OfficeDto[]>;
   entityTypeDtos$: Observable<EntityTypeDto[]>;
 
@@ -38,15 +39,18 @@ export class AppComponent implements OnInit {
      * tree to the provided selector
      */
     this.loggedIn$ = this.store.pipe(select(fromAuth.getLoggedIn));
-    this.offices$ = this.store.pipe(select(fromAuth.getOffices));
+    this.offices$ = this.store.pipe(select(fromAuth.getUserOffices));
     this.selectedOfficeId$ = this.store.pipe(select(fromAuth.getSelectedOfficeId));
-    this.entityTypeDtos$ = this.store.pipe(select(fromAuth.getEntityTypes));
-    
+    this.entityTypeDtos$ = this.store.pipe(select(fromAuth.getSelectedOfficeEntityTypes)); //
+    this.selectedEntityTypePolicyAccessType$ = this.store.pipe(select(fromAuth.getSelectedEntityTypePolicyAccessType));
+    this.selectedEntityTypePolicyAccessType$.subscribe( a => 
+      console.log('selectedEntityTypePolicyAccessType = ',a)
+    );
   }
     
-  onSelectOffice(officeId: string)
+  onSelectOffice(office: OfficeDto)
   {
-    this._authService.onSelectOffice(officeId);
+    this._authService.onSelectOffice(office);
   }
 
   onSelectEntityType(entity: EntityTypeDto){

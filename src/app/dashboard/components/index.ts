@@ -7,10 +7,11 @@ import { RouterModule } from '@angular/router';
 import { MaterialModule } from 'src/app/material';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { SharedModule } from 'src/app/shared';
+import { DashboardComponent } from './dashboard/dashboard.component';
 
 
 export const COMPONENTS = [
-    
+    DashboardComponent
 ];
 
 @NgModule({

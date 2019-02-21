@@ -2,17 +2,17 @@ import { TenantDto } from "src/app/shared/models";
 import { TenantActionsUnion, TenantActionTypes } from "../actions/tenant.actions";
 
 export interface TenantState {
-    tenants: TenantDto[] | null;
+    tenants: TenantDto[];
     loading: boolean;
     error: string;
-    selectedTenantId: string | null;
+    selectedTenantId: string;
   }
   
   export const tenantInitialState: TenantState = {
     tenants: [],
     loading: false,
     error: '',
-    selectedTenantId: null,
+    selectedTenantId: '',
   };
   
   export function tenantReducer(
@@ -33,7 +33,7 @@ export interface TenantState {
           tenants: action.payload,
           loading: false,
           error: '',
-          selectedTenantId: null,
+          selectedTenantId: '',
         };
       }
   
@@ -48,7 +48,64 @@ export interface TenantState {
       case TenantActionTypes.SelectTenant: {
         return {
             ...state,
-            selectedTenantId: action.payload,
+            selectedTenantId: action.payload.Id,
+        };
+      }
+
+      case TenantActionTypes.ClearSelectedTenant: {
+        return {
+            ...state,
+            selectedTenantId: '',
+        };
+      }
+
+      case TenantActionTypes.SaveTenant: {
+          return {
+            ...state,
+            loading: true,
+            error: '',
+        };
+      }
+
+      case TenantActionTypes.SaveTenantSuccess: {
+        return {
+          ...state,
+          tenants: action.payload,
+          loading: false,
+          error: '',
+        };
+      }
+
+      case TenantActionTypes.SaveTenantFailure: {
+        return {
+            ...state,
+            loading: false,
+            error: action.payload,          
+        };
+      }
+
+      case TenantActionTypes.UpdateTenant: {
+          return {
+            ...state,
+            loading: true,
+            error: '',
+        };
+      }
+
+      case TenantActionTypes.UpdateTenantSuccess: {
+        return {
+          ...state,
+          tenants: action.payload,
+          loading: false,
+          error: '',
+        };
+      }
+
+      case TenantActionTypes.UpdateTenantFailure: {
+        return {
+            ...state,
+            loading: false,
+            error: action.payload,          
         };
       }
 
@@ -62,6 +119,7 @@ export interface TenantState {
   export const getTenantLoading = (state: TenantState) => state.loading;
   export const getTenantError = (state: TenantState) => state.error;
   export const getSelectedTenantId = (state: TenantState) => state.selectedTenantId;
+
   
   
   

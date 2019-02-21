@@ -14,7 +14,7 @@
               Choose an Office
           </button>
           <div ngbDropdownMenu aria-labelledby="navbarDropdown">
-              <a *ngFor="let office of offices$ | async" class="dropdown-item" (click)="onSelectOffice(office.Id)" routerLinkActive="active" >{{office.OfficeName}}</a> 
+              <a *ngFor="let office of offices$ | async" class="dropdown-item" (click)="onSelectOffice(office)" routerLinkActive="active" >{{office.OfficeName}}</a> 
           </div>
         </div>
       </div>

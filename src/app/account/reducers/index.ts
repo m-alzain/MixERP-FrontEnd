@@ -28,3 +28,7 @@ import {
   export const getTenants = createSelector(selectTenantState, fromTenant.getTenants);
   export const getTenantLoading = createSelector(selectTenantState, fromTenant.getTenantLoading);
   export const getTenantError = createSelector(selectTenantState, fromTenant.getTenantError);
+  export const getSelectedTenantId = createSelector(selectTenantState, fromTenant.getSelectedTenantId);
+  export const getSelectedTenant = createSelector(getTenants,getSelectedTenantId,  (tenants, id) => tenants.find(t => !!id && t.Id == id)); 
+  export const getSelectedTenantOffices = createSelector(getSelectedTenant, t => !!t && t.Offices);
+  

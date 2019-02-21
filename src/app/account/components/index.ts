@@ -8,9 +8,10 @@ import { MaterialModule } from 'src/app/material';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { SharedModule } from 'src/app/shared';
 import { TenantListComponent } from './tenant-list/tenant-list.component';
+import { TenantDetailComponent } from './tenant-detail/tenant-detail.component';
 
 export const COMPONENTS = [
-    TenantListComponent,      
+    TenantListComponent, TenantDetailComponent,      
 ];
 
 @NgModule({

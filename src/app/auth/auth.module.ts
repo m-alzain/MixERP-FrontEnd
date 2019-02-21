@@ -9,6 +9,7 @@ import { LogoutCallbackComponent } from './components/logout-callback/logout-cal
 import { AuthService } from './services/auth.service';
 import { EffectsModule } from '@ngrx/effects';
 import { AuthEffects } from './effects/auth.effects';
+import { AuthGuard } from './services/auth.guard';
 
 @NgModule({
   declarations: [AuthCallbackComponent, LogoutCallbackComponent],
@@ -19,6 +20,6 @@ import { AuthEffects } from './effects/auth.effects';
 
     EffectsModule.forFeature([AuthEffects]),
   ],
-  providers: [AuthService]
+  providers: [AuthService, AuthGuard]
 })
 export class AuthModule { }

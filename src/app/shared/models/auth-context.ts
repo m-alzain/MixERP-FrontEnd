@@ -130,15 +130,15 @@ export class TenantDto
   
   export enum AccessType {
     
-    READ = 0,
-    CREATE = 1,
-    EDIT = 2,
-    DELETE = 3,
-    CREATEFILTER = 4,
-    DELETEFILTER = 5,
-    EXPORT = 6,
-    EXPORTDATA = 7,
-    IMPORTDATA = 8,
-    EXECUTE = 9,
-    VERIFY = 10,
+    READ = 1,
+    CREATE = 2,
+    EDIT = 3,
+    DELETE = 4,
+    CREATEFILTER = 5,
+    DELETEFILTER = 6,
+    EXPORT = 7,
+    EXPORTDATA = 8,
+    IMPORTDATA = 9,
+    EXECUTE = 10,
+    VERIFY = 11,
   }

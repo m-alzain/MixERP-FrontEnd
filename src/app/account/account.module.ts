@@ -9,13 +9,13 @@ import { StoreModule } from '@ngrx/store';
 import { reducers } from 'src/app/account/reducers';
 import { EffectsModule } from '@ngrx/effects';
 import { TenantEffects } from './effects/tenant.effects';
-import { FindTenantPageComponent } from './containers/find-tenant-page.component';
 import { SharedModule } from '../shared';
+
 
 
 @NgModule({
   declarations: [
-    FindTenantPageComponent
+    
   ],
   imports: [
     CommonModule,

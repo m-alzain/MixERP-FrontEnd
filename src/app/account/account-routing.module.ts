@@ -1,9 +1,21 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { FindTenantPageComponent } from './containers/find-tenant-page.component';
+import { AuthGuard } from '../auth/services/auth.guard';
+import { TenantListComponent } from './components/tenant-list/tenant-list.component';
+import { TenantDetailComponent } from './components/tenant-detail/tenant-detail.component';
 
 const routes: Routes = [
-  { path: '', component: FindTenantPageComponent },
+  {
+    path: '',
+    canActivate: [AuthGuard],
+    children: [
+      { path: 'tenants', component: TenantListComponent },
+      {
+        path: 'tenants/:id',
+        component: TenantDetailComponent,
+      },
+    ],
+  }
 ];
 
 @NgModule({

@@ -51,11 +51,11 @@ $dark-primary: #008784;
   }
 }
 
-@media only screen and (min-width: 768px) {
-  .table-responsive {
-    overflow: visible;
-  }
-}
+// @media only screen and (min-width: 768px) {
+//   .table-responsive {
+//     overflow: visible;
+//   }
+// }
 
 a {
   color: $dark-primary;
