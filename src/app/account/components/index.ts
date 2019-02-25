@@ -9,9 +9,11 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { SharedModule } from 'src/app/shared';
 import { TenantListComponent } from './tenant-list/tenant-list.component';
 import { TenantDetailComponent } from './tenant-detail/tenant-detail.component';
+import { UserListComponent } from './user-list/user-list.component';
+import { RoleListComponent } from './role-list/role-list.component';
 
 export const COMPONENTS = [
-    TenantListComponent, TenantDetailComponent,      
+    TenantListComponent, TenantDetailComponent,  UserListComponent, RoleListComponent  
 ];
 
 @NgModule({

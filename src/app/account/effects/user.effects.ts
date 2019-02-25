@@ -13,8 +13,8 @@ import {
 
 
 import { ApiService } from 'src/app/shared/services/api.services';
-import { TenantDto } from 'src/app/shared/models';
-import { GetTenants, TenantActionTypes, GetTenantsSuccess, GetTenantsFailure, UpdateTenant, UpdateTenantSuccess, UpdateTenantFailure, SaveTenant, SaveTenantSuccess, SaveTenantFailure } from '../actions';
+import { UserDto } from 'src/app/shared/models';
+import { GetUsers, UserActionTypes, GetUsersSuccess, GetUsersFailure, SaveUser, SaveUserSuccess, SaveUserFailure, UpdateUser, UpdateUserSuccess, UpdateUserFailure } from '../actions';
 /**
  * Effects offer a way to isolate and easily test side-effects within your
  * application.
@@ -27,71 +27,72 @@ import { GetTenants, TenantActionTypes, GetTenantsSuccess, GetTenantsFailure, Up
  */
 
 @Injectable()
-export class TenantEffects {
+export class UserEffects {
   @Effect()
-  GetTenants$ = ({ debounce = 300, scheduler = asyncScheduler } = {}): Observable<
+  GetUsers$ = ({ debounce = 300, scheduler = asyncScheduler } = {}): Observable<
     Action
   > =>
     this.actions$.pipe(
-      ofType<GetTenants>(
-        TenantActionTypes.GetTenants
+      ofType<GetUsers>(
+        UserActionTypes.GetUsers
       ),
       debounceTime(debounce, scheduler),
-      switchMap(() => {       
+      map(action => action.payload),
+      switchMap((officeId) => {       
         const nextSearch$ = this.actions$.pipe(
-          ofType(TenantActionTypes.GetTenants),
+          ofType(UserActionTypes.GetUsers),
           skip(1)
         );      
-        return this.apiSerivce.get<TenantDto>('account/user/tenants').pipe(
+        return this.apiSerivce.get<UserDto>(`account/office/users/${officeId}`).pipe(
           takeUntil(nextSearch$),
-          map((tenants: TenantDto[]) => new GetTenantsSuccess(tenants)),
-          catchError(err => of(new GetTenantsFailure(err)))
+          map((users: UserDto[]) => new GetUsersSuccess(users)),
+          catchError(err => of(new GetUsersFailure(err)))
         );
       })
     );
 
     @Effect()
-    SaveTenant$ = ({ debounce = 300, scheduler = asyncScheduler } = {}): Observable<
+    SaveUser$ = ({ debounce = 300, scheduler = asyncScheduler } = {}): Observable<
       Action
     > =>
       this.actions$.pipe(
-        ofType<SaveTenant>(
-          TenantActionTypes.SaveTenant
+        ofType<SaveUser>(
+            UserActionTypes.SaveUser
         ),
         debounceTime(debounce, scheduler),
         map(action => action.payload),
-        switchMap((tenant) => {       
+        switchMap((payload) => {       
           const nextSearch$ = this.actions$.pipe(
-            ofType(TenantActionTypes.SaveTenant),
+            ofType(UserActionTypes.SaveUser),
             skip(1)
           );      
-          return this.apiSerivce.post<TenantDto>('account/tenants',tenant).pipe(
+          return this.apiSerivce.post<UserDto>(`account/users/${payload.officeId}`,payload.userDto).pipe(
             takeUntil(nextSearch$),
-            map((tenants: TenantDto) => new SaveTenantSuccess(tenants)),
-            catchError(err => of(new SaveTenantFailure(err)))
+            map((user: UserDto) => new SaveUserSuccess(user)),
+            catchError(err => of(new SaveUserFailure(err)))
           );
         })
       );
 
     @Effect()
-    UpdateTenant$ = ({ debounce = 300, scheduler = asyncScheduler } = {}): Observable<
+    UpdateUser$ = ({ debounce = 300, scheduler = asyncScheduler } = {}): Observable<
       Action
     > =>
       this.actions$.pipe(
-        ofType<UpdateTenant>(
-          TenantActionTypes.UpdateTenant
+        ofType<UpdateUser>(
+            UserActionTypes.UpdateUser
         ),
         debounceTime(debounce, scheduler),
         map(action => action.payload),
-        switchMap((tenant) => {       
+        switchMap((payload) => {       
           const nextSearch$ = this.actions$.pipe(
-            ofType(TenantActionTypes.UpdateTenant),
+            ofType(UserActionTypes.UpdateUser),
             skip(1)
           );      
-          return this.apiSerivce.put<TenantDto>('account/tenants',tenant).pipe(
+          return this.apiSerivce.put<UserDto>(`account/users/${payload.officeId}`,payload.userDto).pipe(
             takeUntil(nextSearch$),
-            map((tenants: TenantDto) => new UpdateTenantSuccess(tenants)),
-            catchError(err => of(new UpdateTenantFailure(err)))
+            map((user: UserDto) => new UpdateUserSuccess(user)),
+            catchError(err => of(new UpdateUserFailure(err)))
           );
         })
       );

@@ -1,0 +1,174 @@
+<mat-card>   
+    <mat-card-title class="mb-2">Users</mat-card-title>
+      <mat-card-content>                
+        <div class="h-100 d-flex flex-column">
+          <div class="row">        
+            <div class="col-12 col-md-3">
+              <mat-card>   
+                <mat-card-title class="mb-2">Users</mat-card-title>
+                <mat-card-content> 
+                  <div class="col-12 p-1 border d-flex justify-content-between b-toolbar">                         
+                    <div>                    
+                      <!-- Refresh -->
+                      <button class="btn btn-light btn-sm text-primary b-white-button" (click)="fetch()">
+                        <fa-icon icon="sync-alt"></fa-icon>
+                        <span class="d-none d-md-inline ">&nbsp;&nbsp;Refresh</span>
+                      </button>
+                    </div>                
+                  </div>
+                  <div class="row b-rest-of-screen bg-light d-flex justify-content-center">
+                    <div class="d-flex flex-column bd-highlight mb-3 align-items-center">
+                      <div *ngIf="!(loading$ | async)" >
+                          <div *ngFor="let user of users$ | async; let i = index" class="p-2 bd-highlight">
+                            <button class="btn btn-light btn-sm text-primary b-white-button" [class.active]="activeModel.Id===user.Id" mat-button (click)="onSelectUser(user)">{{user.Email}}</button>
+                          </div>  
+                      </div>                         
+                    </div>                 
+                  </div>
+                </mat-card-content>                
+              </mat-card>
+            </div>                  
+            <div class="col-12  col-md-9">
+              <mat-card>   
+                <mat-card-title class="mb-2">User Details and Role</mat-card-title>
+                <mat-card-content> 
+                  <div class="col-12 p-1 border d-flex justify-content-between b-toolbar">                         
+                    <div>
+                      <!-- Details -->
+                      <button *ngIf="!!activeModel" class="btn btn-light btn-sm text-primary b-white-button"  [class.active]="userDisplayPage == 'DETAILS'" (click)="onSelectDetailsPage()" > 
+                          <fa-icon icon="user"></fa-icon>                       
+                        <span class="d-none d-md-inline ">&nbsp;&nbsp;Details</span>
+                      </button>
+              
+                      <!-- Roles -->
+                      <button *ngIf="!!activeModel" class="btn btn-light btn-sm text-primary b-white-button" [class.active]="userDisplayPage == 'ROLES'" (click)="onSelectRolesPage()">   
+                          <fa-icon icon="list"></fa-icon>                     
+                        <span class="d-none d-md-inline ">&nbsp;&nbsp;Role</span>
+                      </button>
+                    </div>                
+                  </div> 
+
+                  <!-- Toolbar -->
+                  <div class="col-12 p-1 border  d-flex justify-content-between b-toolbar">
+                    <!-- View Toolbar -->
+                    <div>
+                      <!-- Edit -->
+                      <button *ngIf="!isEdit && !!activeModel && (userDisplayPage == 'DETAILS' || (userDisplayPage == 'ROLES' && activeModel.Roles?.length ==1))" [disabled]="!canEdit" class="btn btn-light btn-sm text-primary b-white-button" (click)="onEdit()" >
+                        <fa-icon icon="edit"></fa-icon>
+                        <span class="d-none d-md-inline">&nbsp;&nbsp;Edit</span>
+                      </button>                                                       
+
+                      <!-- Create -->
+                      <button *ngIf="!isEdit && (userDisplayPage == 'DETAILS')"  [disabled]="!canCreate" class="btn btn-light btn-sm text-primary b-white-button" (click)="onCreate()">
+                        <fa-icon icon="plus"></fa-icon>
+                        <span class="d-none d-md-inline ">&nbsp;&nbsp;Create</span>
+                      </button>
+              
+                      <!-- Add -->
+                      <button *ngIf="(!isEdit && userDisplayPage == 'DETAILS') || (userDisplayPage == 'ROLES' && activeModel.Roles?.length < 1)" [disabled]="!canCreate" class="btn btn-light btn-sm text-primary b-white-button" (click)="onAdd()">
+                        <fa-icon icon="plus"></fa-icon>
+                        <span class="d-none d-md-inline">&nbsp;&nbsp;Add</span>
+                      </button>
+
+                      <!-- Remove -->
+                      <button *ngIf="!isEdit && (userDisplayPage == 'DETAILS') && !!activeModel" [disabled]="!canDelete"  class="btn btn-light btn-sm text-primary b-white-button" 
+                        (click)="modalService.open(confirmDeleteModal, {ariaLabelledBy: 'modal-basic-title'})" >
+                        <fa-icon icon="trash-alt"></fa-icon>
+                        <span class="d-none d-md-inline">&nbsp;&nbsp;Remove</span>
+                      </button>                                    
+              
+                    </div>
+              
+                    <!-- Edit Toolbar -->
+                    <div class="b-toolbar mr-auto" *ngIf="isEdit">
+                      <button [disabled]="!canSave" class="btn btn-primary btn-sm" (click)="onSave()" >
+                        <fa-icon icon="save"></fa-icon>
+                        <span class="d-none d-md-inline">&nbsp;&nbsp;Save</span>
+                      </button>
+              
+                      <button  [disabled]="!canCancel" class="btn btn-light btn-sm text-primary b-white-button" (click)="onCancel()">
+                        <fa-icon icon="times"></fa-icon>
+                        <span class="d-none d-md-inline">&nbsp;&nbsp;Cancel</span>
+                      </button>
+                    </div>
+                  </div>
+                  
+
+                  <div class="p-0 p-sm-3 d-flex flex-column align-items-center border-top" *ngIf="!this.loading || this.isEdit">
+                    <div class="border bg-white w-100 b-paper" (dblclick)="onDblClick()">
+                      <div class="row m-0 pl-1 pl-sm-3 pr-1 pr-sm-3 pt-3 pt-sm-4 pb-3 pb-sm-5">                        
+                         
+                        <div class="mt-2 mt-lg-1 col-12" *ngIf="(userDisplayPage == 'DETAILS') && !(loading$ | async)" >
+                          <mat-form-field class="mx-2">
+                              <input  [disabled]="!isEdit" matInput placeholder="Email"  [(ngModel)]="activeModel.Email" name="Email">
+                          </mat-form-field>
+                          <mat-form-field class="mx-2">
+                              <input  [disabled]="!isEdit" matInput placeholder="Name"  [(ngModel)]="activeModel.Name" name="Name" >
+                          </mat-form-field>
+                          <mat-form-field class="mx-2">
+                              <input  [disabled]="!isEdit" matInput placeholder="Phone"  [(ngModel)]="activeModel.Phone" name="Phone">
+                          </mat-form-field>
+                          <mat-form-field class="mx-2">
+                              <input  [disabled]="!isEdit" matInput placeholder="Status"  [(ngModel)]="activeModel.Status" name="Status" >
+                          </mat-form-field>                               
+                        </div>  
+                        
+                        <div class="d-flex flex-column bd-highlight mb-3 align-items-center" *ngIf="(userDisplayPage == 'ROLES') && !(loading$ | async)">                          
+                          <!-- <div *ngFor="let role of activeModel.Roles; let i = index " class="p-2 bd-highlight"> -->
+
+                            <tr *ngIf="activeModel.Roles?.length < 1">
+                              <td class="font-italic font-weight-light text-muted" colspan="1000">No Role.</td>
+                            </tr>
+
+                            <button *ngIf="!isEdit && activeModel.Roles?.length == 1" class="btn btn-light btn-sm text-primary b-white-button" mat-button >{{activeModel.Roles[0].RoleName}}</button>
+                            <div *ngIf="isEdit && activeModel.Roles?.length == 1" class="d-flex justify-content-start">
+                              <b-details-picker  [(ngModel)]="activeModel.Roles[0].Id" [formatter]="roleFormatter" [focusIf]='true' required
+                                        #roleControl="ngModel" [class.is-invalid]="roleControl.invalid && roleControl.touched" 
+                                        [searchResults$]="roles$" [loading$]="roleLoading$" [error$]="roleError$" (onTerm)="onRoleTerm($event)">
+                              </b-details-picker>
+                              <!-- <span >
+                                  &nbsp;&nbsp;<fa-icon class="text-danger b-pointer" icon="trash-alt" (click)="onDeleteRole(i, activeModel)" title="Delete"></fa-icon>
+                              </span>  -->
+                            </div>                                                     
+                          <!-- </div>  -->
+                          <!-- <button  *ngIf="isEdit" class="btn btn-link text-primary p-0 border-0" type="button" (focus)="onAddRole(activeModel)"> &nbsp; Add a Role...</button>                           -->
+                        </div>
+
+                      </div>
+                    </div>
+                  </div>
+                </mat-card-content>                
+              </mat-card>
+            </div>
+
+            <!-- Spinner -->
+            <div class="w-100 p-2 d-flex justify-content-center" *ngIf="(loading$ | async)">
+              <b-spinner [scale]="2"></b-spinner>
+            </div>         
+            <!-- No items found -->
+            <!-- <div class="w-100 pl-3 pr-3" *ngIf="showNoItemsFound">No items found.</div> -->  
+            <!-- Error message -->
+            <b-error-message *ngIf="(error$ | async)">
+              {{ error$ | async }}
+            </b-error-message>                            
+                             
+          </div>  
+        </div>   
+    </mat-card-content>           
+  </mat-card>
+
+
+  <!-- Confirm Delete Modal -->
+<ng-template #confirmDeleteModal let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title">Confirmation</h5>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">Are you sure you want to delete?</div>
+  <div class="modal-footer">
+    <button class="btn btn-primary" (click)="modal.dismiss(); onDelete();">Yes</button>
+    <button class="btn btn-light text-primary b-white-button" (click)="modal.dismiss()">No</button>
+  </div>
+</ng-template>

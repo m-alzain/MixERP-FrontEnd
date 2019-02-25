@@ -20,7 +20,7 @@ export interface TenantState {
     action: TenantActionsUnion
   ): TenantState {
     switch (action.type) {
-      case TenantActionTypes.GetTenant: {
+      case TenantActionTypes.GetTenants: {
           return {
             ...state,
             loading: true,
@@ -28,7 +28,7 @@ export interface TenantState {
         };
       }
   
-      case TenantActionTypes.GetTenantSuccess: {
+      case TenantActionTypes.GetTenantsSuccess: {
         return {
           tenants: action.payload,
           loading: false,
@@ -37,7 +37,7 @@ export interface TenantState {
         };
       }
   
-      case TenantActionTypes.GetTenantFailure: {
+      case TenantActionTypes.GetTenantsFailure: {
         return {
             ...state,
             loading: false,
@@ -70,9 +70,10 @@ export interface TenantState {
       case TenantActionTypes.SaveTenantSuccess: {
         return {
           ...state,
-          tenants: action.payload,
+          tenants: [...state.tenants ,action.payload],
           loading: false,
           error: '',
+          selectedTenantId: action.payload.Id,
         };
       }
 
@@ -93,11 +94,13 @@ export interface TenantState {
       }
 
       case TenantActionTypes.UpdateTenantSuccess: {
+        var te = state.tenants.filter(t => t.Id != action.payload.Id);
         return {
           ...state,
-          tenants: action.payload,
+          tenants: [...te ,action.payload],
           loading: false,
           error: '',
+          selectedTenantId: action.payload.Id,
         };
       }
 

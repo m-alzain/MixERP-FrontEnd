@@ -1,7 +1,7 @@
-<div ngbDropdown [placement]="placement" #dropdown="ngbDropdown">
+<div class="d-flex justify-content-start" ngbDropdown [placement]="placement" #dropdown="ngbDropdown">
 
   <!-- The Search Field -->
-  <input class="form-control b-input"
+  <input class="form-control b-input flex-grow-1"
          #input
          (blur)="onBlur();"
          [disabled]="isDisabled"
@@ -14,7 +14,7 @@
     <ng-container *ngIf="showResults">
       <button class="dropdown-item" *ngFor="let item of searchResults; let i = index"
               [class.active]="i===highlightedIndex" (mouseenter)="onMouseEnter(i)" style="cursor:default" (focus)="onFocus(item)">
-        {{ formatter(item) }}
+        {{ format(item) }}
       </button>
     </ng-container>
     <div class="text-center">

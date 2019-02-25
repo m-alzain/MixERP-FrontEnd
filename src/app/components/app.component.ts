@@ -9,7 +9,7 @@ import * as fromRoot from 'src/app/reducers'
 import * as fromAuth from 'src/app/auth/reducers'
 import { MatDialog } from '@angular/material';
 import { AuthService } from '../auth/services/auth.service';
-import { OfficeDto, EntityTypeDto } from '../shared/models';
+import { OfficeDto, EntityTypeDto, RoleDto } from '../shared/models';
 
 
 @Component({
@@ -21,7 +21,6 @@ import { OfficeDto, EntityTypeDto } from '../shared/models';
 export class AppComponent implements OnInit {
   loggedIn$: Observable<boolean>;
   selectedOfficeId$: Observable<string>;
-  selectedEntityTypePolicyAccessType$: Observable<number>;
   offices$: Observable<OfficeDto[]>;
   entityTypeDtos$: Observable<EntityTypeDto[]>;
 
@@ -42,10 +41,6 @@ export class AppComponent implements OnInit {
     this.offices$ = this.store.pipe(select(fromAuth.getUserOffices));
     this.selectedOfficeId$ = this.store.pipe(select(fromAuth.getSelectedOfficeId));
     this.entityTypeDtos$ = this.store.pipe(select(fromAuth.getSelectedOfficeEntityTypes)); //
-    this.selectedEntityTypePolicyAccessType$ = this.store.pipe(select(fromAuth.getSelectedEntityTypePolicyAccessType));
-    this.selectedEntityTypePolicyAccessType$.subscribe( a => 
-      console.log('selectedEntityTypePolicyAccessType = ',a)
-    );
   }
     
   onSelectOffice(office: OfficeDto)

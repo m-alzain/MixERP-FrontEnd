@@ -27,14 +27,15 @@ import {
   faThumbsUp,
   faThumbsDown,
   faUndo,
-  faClipboardCheck
+  faClipboardCheck,
+  faUser,
 } from '@fortawesome/free-solid-svg-icons';
 library.add(
   faExclamationTriangle, faSpinner, faSignInAlt, faSignOutAlt, faUserPlus,
   faKey, faCheck, faPlus, faSyncAlt, faAngleDoubleLeft,
   faAngleLeft, faAngleRight, faThLarge, faList, faEdit, faTrashAlt,
   faSave, faTimes, faDownload, faArrowCircleRight, faThumbsUp, faThumbsDown,
-  faUndo, faClipboardCheck
+  faUndo, faClipboardCheck,faUser
 
 );
 

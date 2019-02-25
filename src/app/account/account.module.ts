@@ -10,13 +10,14 @@ import { reducers } from 'src/app/account/reducers';
 import { EffectsModule } from '@ngrx/effects';
 import { TenantEffects } from './effects/tenant.effects';
 import { SharedModule } from '../shared';
+import { UserEffects } from './effects/user.effects';
+import { RoleEffects } from './effects/role.effects';
 
 
 
 @NgModule({
   declarations: [
-    
-  ],
+    ],
   imports: [
     CommonModule,
     AccountRoutingModule,
@@ -27,7 +28,7 @@ import { SharedModule } from '../shared';
     
     StoreModule.forFeature('account', reducers),
 
-    EffectsModule.forFeature([TenantEffects]),
+    EffectsModule.forFeature([TenantEffects, UserEffects, RoleEffects]),
   ]
 })
 export class AccountModule { }

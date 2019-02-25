@@ -3,9 +3,9 @@ import { TenantDto } from 'src/app/shared/models';
 
 export enum TenantActionTypes {
 
-    GetTenant = '[Account/Tenants/API] GetTenant',
-    GetTenantSuccess = '[Account/Tenants/API] GetTenant Success',
-    GetTenantFailure = '[Account/Tenants/API] GetTenant Failure',
+    GetTenants = '[Account/Tenants/API] GetTenants',
+    GetTenantsSuccess = '[Account/Tenants/API] GetTenants Success',
+    GetTenantsFailure = '[Account/Tenants/API] GetTenants Failure',
 
     SelectTenant = '[Account Tenant Page] Select Tenant',
     ClearSelectedTenant = '[Account Tenant Page] Clear Selected Tenant',
@@ -18,13 +18,6 @@ export enum TenantActionTypes {
     UpdateTenantSuccess = '[Account/Tenants/API] Update Tenant Success',
     UpdateTenantFailure = '[Account/Tenants/API] Update Tenant Failure',
 
-    // DeleteJournalEntry = '[JournalEntries/API] Delete JournalEntry',
-    // DeleteJournalEntrySuccess = '[JournalEntries/API] Delete JournalEntry Success',
-    // DeleteJournalEntryFailure = '[JournalEntries/API] Delete JournalEntry Failure',
-
-    // ChangeStateJournalEntry = '[JournalEntries/API] ChangeState JournalEntry',
-    // ChangeStateJournalEntrySuccess = '[JournalEntries/API] ChangeState JournalEntry Success',
-    // ChangeStateJournalEntryFailure = '[JournalEntries/API] ChangeState JournalEntry Failure',
 }
 
 /**
@@ -35,18 +28,18 @@ export enum TenantActionTypes {
  * See Discriminated Unions: https://www.typescriptlang.org/docs/handbook/advanced-types.html#discriminated-unions
  */
 
-export class GetTenant implements Action {
-    readonly type = TenantActionTypes.GetTenant;
+export class GetTenants implements Action {
+    readonly type = TenantActionTypes.GetTenants;
 }
 
-export class GetTenantSuccess implements Action {
-    readonly type = TenantActionTypes.GetTenantSuccess;
+export class GetTenantsSuccess implements Action {
+    readonly type = TenantActionTypes.GetTenantsSuccess;
 
     constructor(public payload: TenantDto[]) {}
 }
 
-export class GetTenantFailure implements Action {
-    readonly type = TenantActionTypes.GetTenantFailure;
+export class GetTenantsFailure implements Action {
+    readonly type = TenantActionTypes.GetTenantsFailure;
 
     constructor(public payload: string) {}
 }
@@ -71,7 +64,7 @@ export class SaveTenant implements Action {
 export class SaveTenantSuccess implements Action {
     readonly type = TenantActionTypes.SaveTenantSuccess;
 
-    constructor(public payload: TenantDto[]) {}
+    constructor(public payload: TenantDto) {}
 }
 
 export class SaveTenantFailure implements Action {
@@ -89,7 +82,7 @@ export class UpdateTenant implements Action {
 export class UpdateTenantSuccess implements Action {
     readonly type = TenantActionTypes.UpdateTenantSuccess;
 
-    constructor(public payload: TenantDto[]) {}
+    constructor(public payload: TenantDto) {}
 }
 
 export class UpdateTenantFailure implements Action {
@@ -98,50 +91,14 @@ export class UpdateTenantFailure implements Action {
     constructor(public payload: string) {}
 }
 
-// export class DeleteJournalEntry implements Action {
-//     readonly type = JournalEntryActionTypes.DeleteJournalEntry;
-  
-//     constructor(public payload: string) {}
-// }
-
-// export class DeleteJournalEntrySuccess implements Action {
-//     readonly type = JournalEntryActionTypes.DeleteJournalEntrySuccess;
-
-//     constructor(public payload: string) {}
-// }
-
-// export class DeleteJournalEntryFailure implements Action {
-//     readonly type = JournalEntryActionTypes.DeleteJournalEntryFailure;
-
-//     constructor(public payload: string) {}
-// }
-// //
-// export class ChangeStateJournalEntry implements Action {
-//     readonly type = JournalEntryActionTypes.ChangeStateJournalEntry;
-  
-//     constructor(public payload: EntryState) {}
-// }
-
-// export class ChangeStateJournalEntrySuccess implements Action {
-//     readonly type = JournalEntryActionTypes.ChangeStateJournalEntrySuccess;
-
-//     constructor(public payload: EntryState) {}
-// }
-
-// export class ChangeStateJournalEntryFailure implements Action {
-//     readonly type = JournalEntryActionTypes.ChangeStateJournalEntryFailure;
-
-//     constructor(public payload: string) {}
-// }
 /**
  * Export a type alias of all actions in this action group
  * so that reducers can easily compose action types
  */
 export type TenantActionsUnion = 
-GetTenant 
-|GetTenantSuccess 
-|GetTenantFailure
-
+GetTenants 
+|GetTenantsSuccess 
+|GetTenantsFailure
 |SelectTenant 
 |ClearSelectedTenant
 |SaveTenant
@@ -149,11 +106,4 @@ GetTenant
 |SaveTenantFailure
 |UpdateTenant
 |UpdateTenantSuccess
-|UpdateTenantFailure
-// |DeleteJournalEntry
-// |DeleteJournalEntrySuccess
-// |DeleteJournalEntryFailure
-// |ChangeStateJournalEntry
-// |ChangeStateJournalEntrySuccess
-// |ChangeStateJournalEntryFailure
-;
+|UpdateTenantFailure;

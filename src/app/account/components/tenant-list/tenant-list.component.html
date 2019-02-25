@@ -3,7 +3,7 @@
     <mat-card-content>                
       <div class="h-100 d-flex flex-column">
         <div class="row">        
-          <div class="col-6">
+          <div class="col-12 col-sm-6">
             <mat-card>   
               <mat-card-title class="mb-2">Tenants</mat-card-title>
               <mat-card-content> 
@@ -36,17 +36,17 @@
                       <b-spinner [scale]="2"></b-spinner>
                     </div>         
                     <!-- No items found -->
-                    <!-- <div class="w-100 pl-3 pr-3" *ngIf="showNoItemsFound">No items found.</div> -->          
+                    <!-- <div class="w-100 pl-3 pr-3" *ngIf="showNoItemsFound">No items found.</div> -->  
                     <!-- Error message -->
                     <b-error-message *ngIf="(error$ | async)">
-                      {{ error }}
-                    </b-error-message>
-                  </div>
+                      {{ error$ | async }}
+                    </b-error-message>                            
+                  </div>                 
                 </div>
               </mat-card-content>                
             </mat-card>
           </div>                  
-          <div class="col-6">
+          <div class="col-12  col-sm-6">
             <mat-card>   
               <mat-card-title class="mb-2">Offices</mat-card-title>
               <mat-card-content> 
@@ -79,12 +79,12 @@
                       <b-spinner [scale]="2"></b-spinner>
                     </div>         
                     <!-- No items found -->
-                    <!-- <div class="w-100 pl-3 pr-3" *ngIf="showNoItemsFound">No items found.</div> -->          
+                    <!-- <div class="w-100 pl-3 pr-3" *ngIf="showNoItemsFound">No items found.</div> --> 
                     <!-- Error message -->
                     <b-error-message *ngIf="(error$ | async)">
-                      {{ error }}
-                    </b-error-message>
-                  </div>
+                      {{ error$ | async }}
+                    </b-error-message>                                                
+                  </div>                  
                 </div>
 
               </mat-card-content>                

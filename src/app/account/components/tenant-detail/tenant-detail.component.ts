@@ -18,7 +18,7 @@ import { ClearSelectedTenant, UpdateTenant, SaveTenant } from '../../actions';
   templateUrl: './tenant-detail.component.html',
   styleUrls: ['./tenant-detail.component.scss']
 })
-export class TenantDetailComponent implements OnDestroy, OnInit {
+export class TenantDetailComponent implements OnInit {
 
   @ViewChild(DetailsComponent)
   details: DetailsComponent;
@@ -52,10 +52,6 @@ export class TenantDetailComponent implements OnDestroy, OnInit {
     this.selectedEntityTypePolicyAccessType$ = store.pipe(select(fromAuth.getSelectedEntityTypePolicyAccessType));
     this.isAdmin$.subscribe(a => this.isAdmin = a);
     this.selectedEntityTypePolicyAccessType$.subscribe(a => this.selectedEntityTypePolicyAccessType = a);
-  }
-
-
-  ngOnDestroy() {    
   }
 
   canDeactivate(): boolean {

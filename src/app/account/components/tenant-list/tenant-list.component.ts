@@ -1,13 +1,12 @@
 
-import { ChangeDetectionStrategy, Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, OnDestroy } from '@angular/core';
 import { select, Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
-import { take } from 'rxjs/operators';
 import { TenantDto, OfficeDto } from 'src/app/shared/models';
 import * as fromRoot from 'src/app/reducers';
 import * as fromAccount from 'src/app/account/reducers';
 import * as fromAuth from 'src/app/auth/reducers';
-import { GetTenant, SelectTenant, ClearSelectedTenant } from 'src/app/account/actions';
+import { GetTenants, SelectTenant, ClearSelectedTenant } from 'src/app/account/actions';
 import { Router, ActivatedRoute } from '@angular/router';
 
 
@@ -17,7 +16,7 @@ import { Router, ActivatedRoute } from '@angular/router';
   templateUrl: './tenant-list.component.html',
   styleUrls: ['./tenant-list.component.scss']
 })
-export class TenantListComponent implements OnInit {
+export class TenantListComponent implements OnDestroy,  OnInit {
 
   tenants$: Observable<TenantDto[]>; 
   loading$: Observable<boolean>;
@@ -39,8 +38,12 @@ export class TenantListComponent implements OnInit {
     this.fetch();
   }
 
+  ngOnDestroy() {  
+    // considering creating clear action; if it is necessary.  
+  }
+
   fetch() {
-    this.store.dispatch(new GetTenant());
+    this.store.dispatch(new GetTenants());
   }
  
 
