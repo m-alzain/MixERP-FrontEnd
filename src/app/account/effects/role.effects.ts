@@ -14,7 +14,7 @@ import {
 
 import { ApiService } from 'src/app/shared/services/api.services';
 import { RoleDto } from 'src/app/shared/models';
-import { GetRoles, RoleActionTypes, GetRolesSuccess, GetRolesFailure } from '../actions/role.actions';
+import { GetRoles, RoleActionTypes, GetRolesSuccess, GetRolesFailure, SaveRole, SaveRoleSuccess, SaveRoleFailure, UpdateRole, UpdateRoleSuccess, UpdateRoleFailure, DeleteRole, DeleteRoleSuccess, DeleteRoleFailure } from '../actions/role.actions';
 /**
  * Effects offer a way to isolate and easily test side-effects within your
  * application.
@@ -51,51 +51,74 @@ export class RoleEffects {
       })
     );
 
-    // @Effect()
-    // SaveUser$ = ({ debounce = 300, scheduler = asyncScheduler } = {}): Observable<
-    //   Action
-    // > =>
-    //   this.actions$.pipe(
-    //     ofType<SaveUser>(
-    //         RoleActionTypes.SaveUser
-    //     ),
-    //     debounceTime(debounce, scheduler),
-    //     map(action => action.payload),
-    //     switchMap((payload) => {       
-    //       const nextSearch$ = this.actions$.pipe(
-    //         ofType(RoleActionTypes.SaveUser),
-    //         skip(1)
-    //       );      
-    //       return this.apiSerivce.post<UserDto>(`account/users/${payload.officeId}`,payload.userDto).pipe(
-    //         takeUntil(nextSearch$),
-    //         map((user: UserDto) => new SaveUserSuccess(user)),
-    //         catchError(err => of(new SaveUserFailure(err)))
-    //       );
-    //     })
-    //   );
+  @Effect()
+  SaveRole$ = ({ debounce = 300, scheduler = asyncScheduler } = {}): Observable<
+    Action
+  > =>
+    this.actions$.pipe(
+      ofType<SaveRole>(
+          RoleActionTypes.SaveRole
+      ),
+      debounceTime(debounce, scheduler),
+      map(action => action.payload),
+      switchMap((payload) => {       
+        const nextSearch$ = this.actions$.pipe(
+          ofType(RoleActionTypes.SaveRole),
+          skip(1)
+        );      
+        return this.apiSerivce.post<RoleDto>(`account/roles/${payload.officeId}`,payload.roleDto).pipe(
+          takeUntil(nextSearch$),
+          map((role: RoleDto) => new SaveRoleSuccess(role)),
+          catchError(err => of(new SaveRoleFailure(err)))
+        );
+      })
+    );
 
-    // @Effect()
-    // UpdateUser$ = ({ debounce = 300, scheduler = asyncScheduler } = {}): Observable<
-    //   Action
-    // > =>
-    //   this.actions$.pipe(
-    //     ofType<UpdateUser>(
-    //         RoleActionTypes.UpdateUser
-    //     ),
-    //     debounceTime(debounce, scheduler),
-    //     map(action => action.payload),
-    //     switchMap((payload) => {       
-    //       const nextSearch$ = this.actions$.pipe(
-    //         ofType(RoleActionTypes.UpdateUser),
-    //         skip(1)
-    //       );      
-    //       return this.apiSerivce.put<UserDto>(`account/users/${payload.officeId}`,payload.userDto).pipe(
-    //         takeUntil(nextSearch$),
-    //         map((user: UserDto) => new UpdateUserSuccess(user)),
-    //         catchError(err => of(new UpdateUserFailure(err)))
-    //       );
-    //     })
-    //   );
+    @Effect()
+    UpdateRole$ = ({ debounce = 300, scheduler = asyncScheduler } = {}): Observable<
+      Action
+    > =>
+      this.actions$.pipe(
+        ofType<UpdateRole>(
+            RoleActionTypes.UpdateRole
+        ),
+        debounceTime(debounce, scheduler),
+        map(action => action.payload),
+        switchMap((payload) => {       
+          const nextSearch$ = this.actions$.pipe(
+            ofType(RoleActionTypes.UpdateRole),
+            skip(1)
+          );      
+          return this.apiSerivce.put<RoleDto>(`account/roles/${payload.officeId}`,payload.roleDto).pipe(
+            takeUntil(nextSearch$),
+            map((role: RoleDto) => new UpdateRoleSuccess(role)),
+            catchError(err => of(new UpdateRoleFailure(err)))
+          );
+        })
+      );
+
+    @Effect()
+    DeleteRole$ = ({ debounce = 300, scheduler = asyncScheduler } = {}): Observable<
+      Action
+    > =>
+      this.actions$.pipe(
+        ofType<DeleteRole>(
+            RoleActionTypes.DeleteRole
+        ),
+        debounceTime(debounce, scheduler),
+        map(action => action.payload),
+        switchMap((payload) => {       
+          const nextSearch$ = this.actions$.pipe(
+            ofType(RoleActionTypes.DeleteRole),
+            skip(1)
+          );      
+          return this.apiSerivce.delete<RoleDto>(`account/roles/${payload.officeId}/${payload.roleId}`).pipe(
+            takeUntil(nextSearch$),
+            map((role: RoleDto) => new DeleteRoleSuccess(role)),
+            catchError(err => of(new DeleteRoleFailure(err)))
+          );
+        })
+      );
 
   constructor(
     private actions$: Actions,

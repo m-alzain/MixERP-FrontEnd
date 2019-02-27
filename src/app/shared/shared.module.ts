@@ -22,6 +22,8 @@ import {
  } from './layouts';
  import { DecimalEditorComponent, DetailsPickerComponent } from './controls';
 import { AuthInterceptor } from './services/auth.interceptor';
+import { MaterialModule } from '../material';
+import { CanDeactivateGuard } from './services/can-deactivate.guard';
 
 @NgModule({
   declarations: [
@@ -33,7 +35,7 @@ import { AuthInterceptor } from './services/auth.interceptor';
     DetailsComponent,
 
     DecimalEditorComponent,
-    DetailsPickerComponent
+    DetailsPickerComponent,
   ],
   imports: [
     CommonModule,
@@ -46,7 +48,8 @@ import { AuthInterceptor } from './services/auth.interceptor';
 
     NgBootstrapModule,
 
-    SharedRoutingModule
+    SharedRoutingModule,
+    MaterialModule,
   ],
   exports: [
     HttpClientModule,
@@ -63,8 +66,9 @@ import { AuthInterceptor } from './services/auth.interceptor';
     DetailsComponent,
 
     DecimalEditorComponent,
-    DetailsPickerComponent
+    DetailsPickerComponent,
+
   ],
-  providers:[ApiService, { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }]
+  providers:[ApiService, CanDeactivateGuard,{ provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }]
 })
 export class SharedModule { }

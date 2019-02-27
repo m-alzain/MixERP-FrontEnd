@@ -8,7 +8,7 @@ import { RoleActionsUnion, RoleActionTypes, RoleDisplayPage } from "../actions";
     error: string;
     selectedRoleId: string;
     roleDisplayPage: RoleDisplayPage;
-    searchTerm: string;
+    roleSearchTerm: string;
   }
 
   export const roleInitialState: RoleState = {
@@ -17,7 +17,7 @@ import { RoleActionsUnion, RoleActionTypes, RoleDisplayPage } from "../actions";
     error: '',
     selectedRoleId: '',
     roleDisplayPage: RoleDisplayPage.Details,
-    searchTerm:'',
+    roleSearchTerm:'',
   };
   
   export function roleReducer(
@@ -40,7 +40,7 @@ import { RoleActionsUnion, RoleActionTypes, RoleDisplayPage } from "../actions";
           error: '',
           selectedRoleId: '',
           roleDisplayPage: RoleDisplayPage.Details,
-          searchTerm:'',
+          roleSearchTerm:'',
         };
       }
   
@@ -59,13 +59,13 @@ import { RoleActionsUnion, RoleActionTypes, RoleDisplayPage } from "../actions";
         };
       }
 
-      case RoleActionTypes.SetRoleTerm: {
+      case RoleActionTypes.SetRoleSearchTerm: {
         return {
             ...state,
-            searchTerm: action.payload,
+            roleSearchTerm: action.payload,
         };
       }
-
+      
       case RoleActionTypes.ClearSelectedRole: {
         return {
             ...state,
@@ -133,6 +133,36 @@ import { RoleActionsUnion, RoleActionTypes, RoleDisplayPage } from "../actions";
         };
       }
 
+      case RoleActionTypes.DeleteRole: {
+        return {
+          ...state,
+          loading: true,
+          error: '',
+      };
+    }
+
+    case RoleActionTypes.DeleteRoleSuccess: {
+      var te = state.roles.filter(t => t.Id != action.payload.Id);
+      return {
+        ...state,
+        roles: te,
+        loading: false,
+        error: '',
+        selectedRoleId: '',
+      };
+    }
+
+    case RoleActionTypes.DeleteRoleFailure: {
+      return {
+          ...state,
+          loading: false,
+          error: action.payload,          
+      };
+    }
+
+    case RoleActionTypes.ClearRoles: {
+        return roleInitialState;
+    }
       default: {
         return state;
       }
@@ -144,7 +174,8 @@ import { RoleActionsUnion, RoleActionTypes, RoleDisplayPage } from "../actions";
   export const getRoleError = (state: RoleState) => state.error;
   export const getSelectedRoleId = (state: RoleState) => state.selectedRoleId;
   export const getRoleDisplayPage = (state: RoleState) => state.roleDisplayPage;
-  export const getRoleSearchTerm = (state: RoleState) => state.searchTerm;
+  export const getRoleSearchTerm = (state: RoleState) => state.roleSearchTerm;
+  
 
   
   

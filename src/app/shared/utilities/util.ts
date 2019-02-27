@@ -103,3 +103,16 @@ export class Utils {
   };
 
 }
+
+//https://stackoverflow.com/questions/38554562/how-can-i-use-ngfor-to-iterate-over-typescript-enum-as-an-array-of-strings
+export function getENUM(ENUM:any): {key:any; value: any}[] {
+  let myEnum : {key:any; value: any}[] = [];
+  let objectEnum = Object.keys(ENUM);
+  const values = objectEnum.slice( 0 , objectEnum.length / 2 );
+  const keys = objectEnum.slice( objectEnum.length / 2 );
+
+  for (let i = 0 ; i < objectEnum.length/2 ; i++ ) {
+    myEnum.push( { key: keys[i], value: values[i] } ); 
+  }
+  return myEnum;
+}

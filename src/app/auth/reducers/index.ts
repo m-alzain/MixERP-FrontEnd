@@ -70,6 +70,7 @@ import { AccessType } from 'src/app/shared/models';
   //----------
   export const selectEntityTypeState = createSelector( selectAuthState,(state: AuthState) => state.EntityTypeState);
   export const getEntityTypeLoading = createSelector(selectEntityTypeState, fromAuth.getEntityTypeLoading);
+  export const getEntityTypeError = createSelector(selectEntityTypeState, fromAuth.getEntityTypeError);
   export const getEntityTypes = createSelector(selectEntityTypeState, fromAuth.getEntityTypes);
   export const getSelectedOfficeEntityTypes = createSelector(getSelectedOfficRole,getEntityTypes, (r, e)=>
     {
@@ -84,4 +85,7 @@ import { AccessType } from 'src/app/shared/models';
       }      
     }
   );
+
+  export const getEntityTypeSearchTerm = createSelector(selectEntityTypeState, fromAuth.getEntityTypeSearchTerm);
+  export const getSearchedEntityTypes = createSelector(getEntityTypes,getEntityTypeSearchTerm,  (entityTypes, term)  => entityTypes.filter(entityType => entityType.EntityName.includes(term.trim()))); 
  

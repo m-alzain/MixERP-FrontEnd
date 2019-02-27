@@ -112,12 +112,14 @@ export interface EntityTypeState {
   entityTypes: EntityTypeDto[] | null;
   loading: boolean;
   error: string;
+  entityTypeSearchTerm: string;
 }
 
 export const entityTypeInitialState: EntityTypeState = {
   entityTypes: [],
   loading: false,
   error: '',
+  entityTypeSearchTerm:'',
 };
 
 export function entityTypeReducer(
@@ -137,7 +139,8 @@ export function entityTypeReducer(
       return {
         entityTypes: action.payload,
         loading: false,
-        error: ''
+        error: '',
+        entityTypeSearchTerm:'',
       };
     }
 
@@ -148,6 +151,15 @@ export function entityTypeReducer(
           error: action.payload,          
       };
     }
+
+    case AuthActionTypes.SetEntityTypeSearchTerm: {
+      return {
+          ...state,
+          entityTypeSearchTerm: action.payload,
+      };
+    }
+
+
     default: {
       return state;
     }
@@ -156,5 +168,7 @@ export function entityTypeReducer(
 
 export const getEntityTypes = (state: EntityTypeState) => state.entityTypes;
 export const getEntityTypeLoading = (state: EntityTypeState) => state.loading;
+export const getEntityTypeError = (state: EntityTypeState) => state.error;
+export const getEntityTypeSearchTerm = (state: EntityTypeState) => state.entityTypeSearchTerm;
 
 

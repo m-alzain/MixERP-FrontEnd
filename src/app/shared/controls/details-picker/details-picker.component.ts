@@ -1,5 +1,5 @@
-import { AfterViewInit, Component, ElementRef, Input, OnDestroy, ViewChild, Output, EventEmitter } from '@angular/core';
-import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { AfterViewInit, Component, ElementRef, Input, OnDestroy, ViewChild, Output, EventEmitter, OnInit } from '@angular/core';
+import { ControlValueAccessor, NG_VALUE_ACCESSOR, Validators, FormControl, ValidatorFn, AbstractControlOptions } from '@angular/forms';
 import { NgbDropdown } from '@ng-bootstrap/ng-bootstrap';
 import { PlacementArray } from '@ng-bootstrap/ng-bootstrap/util/positioning';
 import { fromEvent, of, Subject, Subscription, Observable } from 'rxjs';
@@ -34,7 +34,7 @@ enum Key {
   templateUrl: './details-picker.component.html',
   providers: [{ provide: NG_VALUE_ACCESSOR, multi: true, useExisting: DetailsPickerComponent }]
 })
-export class DetailsPickerComponent implements AfterViewInit, OnDestroy, ControlValueAccessor {
+export class DetailsPickerComponent implements  OnInit,AfterViewInit, OnDestroy, ControlValueAccessor {
 
   ///////////////// Private Fields
   // private MIN_CHARS_TO_SEARCH = 1;
@@ -46,10 +46,11 @@ export class DetailsPickerComponent implements AfterViewInit, OnDestroy, Control
   private loadingSubscription: Subscription;
   private errorSubscription: Subscription;
   private _status: SearchStatus = null;
-  private _isDisabled = false;
   private _searchResults = [];
   private _formaterResults = [];
-  @Input() searchResults$: Observable<[]>;;
+  @Input() isDisabled: boolean = false;
+  @Input() isRequired: boolean = false;
+  @Input() searchResults$: Observable<[]>;
   @Input() loading$: Observable<boolean>;
   @Input() error$: Observable<string>;
   @Output() onTerm: EventEmitter<any> = new EventEmitter();
@@ -59,6 +60,7 @@ export class DetailsPickerComponent implements AfterViewInit, OnDestroy, Control
   ///////////////// Input Fields
   @ViewChild('input')
   input: ElementRef;
+  inputValue : any;
 
   @ViewChild(NgbDropdown)
   resultsDropdown: NgbDropdown;
@@ -79,12 +81,13 @@ export class DetailsPickerComponent implements AfterViewInit, OnDestroy, Control
   }
   
   ///////////////// Lifecycle Hooks
-  constructor(
-      // private data: DataService
-    ) {
+  constructor() {
       
-     }
+  }
 
+  ngOnInit(){
+    
+  }
   ngAfterViewInit() {
 
     if (this.focusIf) {
@@ -196,7 +199,8 @@ export class DetailsPickerComponent implements AfterViewInit, OnDestroy, Control
   private updateUI(item: any) {
 
     const display = !!item ? this.format(item) : '';
-    this.input.nativeElement.value = display;
+    // this.input.nativeElement.value = display;
+    this.inputValue = display;
   }
 
   private toString(value: any): string {
@@ -222,10 +226,6 @@ export class DetailsPickerComponent implements AfterViewInit, OnDestroy, Control
     this.onTouched = fn;
   }
 
-  setDisabledState?(isDisabled: boolean): void {
-    this._isDisabled = isDisabled;
-  }
-
   ////////////////// UI Bindings
   get searchResults() {
     return this._searchResults;
@@ -233,10 +233,6 @@ export class DetailsPickerComponent implements AfterViewInit, OnDestroy, Control
 
   get highlightedIndex() {
     return this._highlightedIndex;
-  }
-
-  get isDisabled() {
-    return this._isDisabled;
   }
 
   get showSpinner(): boolean {

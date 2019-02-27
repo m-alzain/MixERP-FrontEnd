@@ -1,13 +1,13 @@
 
 import { ChangeDetectionStrategy, Component, OnInit, OnDestroy } from '@angular/core';
 import { select, Store } from '@ngrx/store';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { UserDto, AccessType, RoleDto} from 'src/app/shared/models';
 import * as fromRoot from 'src/app/reducers';
 import * as fromAccount from 'src/app/account/reducers';
 import * as fromAuth from 'src/app/auth/reducers';
 import { Router, ActivatedRoute } from '@angular/router';
-import { GetUsers, ClearSelectedUser, SelectUser, SelectUserDisplayPage, SaveUser, UpdateUser, UserDisplayPage, SetRoleTerm, GetRoles } from '../../actions';
+import { GetUsers, ClearSelectedUser, SelectUser, SelectUserDisplayPage, SaveUser, UpdateUser, UserDisplayPage, SetRoleSearchTerm, GetRoles } from '../../actions';
 import { cloneModel } from 'src/app/shared/utilities';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
@@ -35,14 +35,19 @@ export class UserListComponent implements OnDestroy, OnInit {
   userDisplayPage: UserDisplayPage;
 
 
+  private loadingSubscription: Subscription;
+  private selectedUserSubscription: Subscription;
+  private selectedOfficeIdSubscription: Subscription;
+  private userDisplayPageSubscription: Subscription;
+  private isAdminSubscription: Subscription;
+
   // roles
   roles$: Observable<RoleDto[]>; 
   roleLoading$: Observable<boolean>;
   roleError$: Observable<string>;
   roleFormatter: (entity: any) => string = (entity: any) => entity.RoleName
   onRoleTerm(term : string){
-    this.store.dispatch(new SetRoleTerm(term));
-    console.log('roles = ', this.activeModel.Roles);
+    this.store.dispatch(new SetRoleSearchTerm(term));
   }
   constructor(private store: Store<fromRoot.State>, private router: Router, private route: ActivatedRoute, public modalService: NgbModal) {
     this.users$ = store.pipe(select(fromAccount.getUsers));
@@ -74,6 +79,23 @@ export class UserListComponent implements OnDestroy, OnInit {
 
   ngOnDestroy() {  
     // considering creating clear action; if it is necessary.  
+
+    // cleanup duty 
+    if (!!this.loadingSubscription) {
+      this.loadingSubscription.unsubscribe();
+    }
+    if (!!this.selectedUserSubscription) {
+      this.selectedUserSubscription.unsubscribe();
+    }
+    if (!!this.selectedOfficeIdSubscription) {
+      this.selectedOfficeIdSubscription.unsubscribe();
+    }
+    if (!!this.userDisplayPageSubscription) {
+      this.userDisplayPageSubscription.unsubscribe();
+    }
+    if (!!this.isAdminSubscription) {
+      this.isAdminSubscription.unsubscribe();
+    }    
   }
 
   fetch() {

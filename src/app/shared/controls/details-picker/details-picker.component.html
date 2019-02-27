@@ -1,14 +1,21 @@
-<div class="d-flex justify-content-start" ngbDropdown [placement]="placement" #dropdown="ngbDropdown">
+<div ngbDropdown [placement]="placement" #dropdown="ngbDropdown">
 
   <!-- The Search Field -->
-  <input class="form-control b-input flex-grow-1"
+  <mat-form-field class="mx-2">
+  <input
          #input
          (blur)="onBlur();"
          [disabled]="isDisabled"
          (keydown)="onKeyDown($event)"
          ngbDropdownAnchor
-         autocomplete="off" />
+         autocomplete="off" 
+         matInput
+         [required]="isRequired"
+         [(ngModel)]="inputValue"
+         #inputControl="ngModel"/>
 
+         <mat-error *ngIf="inputControl.invalid">You must select a value</mat-error>
+        </mat-form-field>
   <!-- The Results Dropdown -->
   <div ngbDropdownMenu aria-labelledby="drop">
     <ng-container *ngIf="showResults">

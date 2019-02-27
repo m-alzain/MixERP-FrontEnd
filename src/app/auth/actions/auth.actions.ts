@@ -14,6 +14,8 @@ export enum AuthActionTypes {
   GetEntityTypeSuccess = '[Auth] GetEntityType Success',
   GetEntityTypeFailure = '[Auth] GetEntityType Failure',
 
+  SetEntityTypeSearchTerm = '[Auth] Set EntityType Search Term',
+
   SelectOffice = '[Auth] SelectOffice',
   SelectEntityType = '[Auth] SelectEntityType',
 }
@@ -60,6 +62,12 @@ export class GetAuthContextFailure implements Action {
     constructor(public payload: string) {}
 }
 
+export class SetEntityTypeSearchTerm implements Action {
+  readonly type = AuthActionTypes.SetEntityTypeSearchTerm;
+
+  constructor(public payload:string) {}
+}
+
 export class SelectOffice implements Action {
   readonly type = AuthActionTypes.SelectOffice;
 
@@ -83,4 +91,5 @@ export type AuthActionsUnion = LoginSuccess
 | GetEntityTypeSuccess 
 | GetEntityTypeFailure 
 | SelectOffice 
-| SelectEntityType;
+| SelectEntityType
+|SetEntityTypeSearchTerm;

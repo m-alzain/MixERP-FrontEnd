@@ -15,6 +15,9 @@ import {
   MatTableModule,
   MatPaginatorModule,
   MatSortModule,
+  MatCheckboxModule,
+  MatOptionModule,
+  MatSelectModule,
 } from '@angular/material';
 
 import {MenuModule} from 'primeng/menu';
@@ -36,6 +39,9 @@ import {CalendarModule} from 'primeng/calendar';
     MatTableModule,
     MatPaginatorModule,
     MatSortModule,
+    MatCheckboxModule,
+    MatOptionModule,
+    MatSelectModule,
 
     MenuModule,
     CalendarModule
@@ -55,6 +61,9 @@ import {CalendarModule} from 'primeng/calendar';
     MatTableModule,
     MatPaginatorModule,
     MatSortModule,
+    MatCheckboxModule,
+    MatOptionModule,
+    MatSelectModule,
 
     MenuModule,
     CalendarModule

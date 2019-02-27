@@ -77,9 +77,16 @@ export class ApiService {
     );
   }
 
-  delete(path): Observable<any> {
-    return this.http.delete(
-      `${environment.apiRoot}${path}`
+  delete<T>(path): Observable<any> {
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type':  'application/json',
+        'Authorization': this.authorizationHeaderValue
+      }
+     )
+    };  
+    return this.http.delete<T>(
+      `${environment.apiRoot}${path}`, httpOptions
     ).pipe(
         catchError((error) => {
             const friendlyError = friendly(error);

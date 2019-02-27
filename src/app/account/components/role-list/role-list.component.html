@@ -1,3 +1,199 @@
-<p>
-  role-list works!
-</p>
+<mat-card>   
+  <mat-card-title class="mb-2">Roles</mat-card-title>
+    <mat-card-content>                
+      <div class="h-100 d-flex flex-column">
+        <div class="row">        
+          <div class="col-12 col-md-3">
+            <mat-card>   
+              <mat-card-title class="mb-2">Roles</mat-card-title>
+              <mat-card-content> 
+                <div class="col-12 p-1 border d-flex justify-content-between b-toolbar">                         
+                  <div>                    
+                    <!-- Refresh -->
+                    <button class="btn btn-light btn-sm text-primary b-white-button" (click)="fetch()">
+                      <fa-icon icon="sync-alt"></fa-icon>
+                      <span class="d-none d-md-inline ">&nbsp;&nbsp;Refresh</span>
+                    </button>
+                  </div>                
+                </div>
+                <div class="row b-rest-of-screen bg-light d-flex justify-content-center">
+                  <div class="d-flex flex-column bd-highlight mb-3 align-items-center">
+                    <div *ngIf="!(loading$ | async)" >
+                        <div *ngFor="let role of roles$ | async; let i = index" class="p-2 bd-highlight">
+                          <button class="btn btn-light btn-sm text-primary b-white-button" [class.active]="activeModel.Id===role.Id" mat-button (click)="onSelectRole(role)">{{role.RoleName}}</button>
+                        </div>  
+                    </div>                         
+                  </div>                 
+                </div>
+              </mat-card-content>                
+            </mat-card>
+          </div>                  
+          <div class="col-12  col-md-9">
+            <mat-card>   
+              <mat-card-title class="mb-2">Role Details and Policies</mat-card-title>
+              <mat-card-content> 
+                <div class="col-12 p-1 border d-flex justify-content-between b-toolbar">                         
+                  <div>
+                    <!-- Details -->
+                    <button *ngIf="!!activeModel" class="btn btn-light btn-sm text-primary b-white-button"  [class.active]="roleDisplayPage == 'DETAILS'" (click)="onSelectDetailsPage()" > 
+                        <fa-icon icon="user"></fa-icon>                       
+                      <span class="d-none d-md-inline ">&nbsp;&nbsp;Details</span>
+                    </button>
+            
+                    <!-- Roles -->
+                    <button *ngIf="!!activeModel" class="btn btn-light btn-sm text-primary b-white-button" [class.active]="roleDisplayPage == 'POLICIES'" (click)="onSelectPoliciesPage()">   
+                        <fa-icon icon="list"></fa-icon>                     
+                      <span class="d-none d-md-inline ">&nbsp;&nbsp;Policies</span>
+                    </button>
+                  </div>                
+                </div> 
+
+                <!-- Toolbar -->
+                <div class="col-12 p-1 border  d-flex justify-content-between b-toolbar">
+                  <!-- View Toolbar -->
+                  <div>
+                    <!-- Edit -->
+                    <button *ngIf="!isEdit && !!activeModel" [disabled]="!canEdit" class="btn btn-light btn-sm text-primary b-white-button" (click)="onEdit()" >
+                      <fa-icon icon="edit"></fa-icon>
+                      <span class="d-none d-md-inline">&nbsp;&nbsp;Edit</span>
+                    </button>                                                       
+
+                    <!-- Create -->
+                    <button *ngIf="!isEdit && (roleDisplayPage == 'DETAILS')"  [disabled]="!canCreate" class="btn btn-light btn-sm text-primary b-white-button" (click)="onCreate()">
+                      <fa-icon icon="plus"></fa-icon>
+                      <span class="d-none d-md-inline ">&nbsp;&nbsp;Create</span>
+                    </button>
+            
+                    <!-- Add -->
+                    <button *ngIf="(isEdit && roleDisplayPage == 'POLICIES')" [disabled]="!canCreate" class="btn btn-light btn-sm text-primary b-white-button" (click)="onAddPolicy()">
+                      <fa-icon icon="plus"></fa-icon>
+                      <span class="d-none d-md-inline">&nbsp;&nbsp;Add</span>
+                    </button>
+
+                    <!-- Delete -->
+                    <button *ngIf="!isEdit && (roleDisplayPage == 'DETAILS') && !!activeModel" [disabled]="!canDelete"  class="btn btn-light btn-sm text-primary b-white-button" 
+                      (click)="modalService.open(confirmDeleteModal, {ariaLabelledBy: 'modal-basic-title'})" >
+                      <fa-icon icon="trash-alt"></fa-icon>
+                      <span class="d-none d-md-inline">&nbsp;&nbsp;Delete</span>
+                    </button>                                    
+            
+                  </div>
+            
+                  <!-- Edit Toolbar -->
+                  <div class="b-toolbar mr-auto" *ngIf="isEdit">
+                    <button [disabled]="!canSave" class="btn btn-primary btn-sm" (click)="onSave()" >
+                      <fa-icon icon="save"></fa-icon>
+                      <span class="d-none d-md-inline">&nbsp;&nbsp;Save</span>
+                    </button>
+            
+                    <button  [disabled]="!canCancel" class="btn btn-light btn-sm text-primary b-white-button" (click)="onCancel()">
+                      <fa-icon icon="times"></fa-icon>
+                      <span class="d-none d-md-inline">&nbsp;&nbsp;Cancel</span>
+                    </button>
+                  </div>
+                </div>
+                
+
+                <div class="p-0 p-sm-3 d-flex flex-column align-items-center border-top" *ngIf="!(loading$ | async)">
+                  <div class="border bg-white w-100 b-paper" (dblclick)="onDblClick()">
+                    <b-error-message *ngIf="!!validationError">
+                      {{ validationError }}
+                    </b-error-message>     
+                    <div class="row m-0 pl-1 pl-sm-3 pr-1 pr-sm-3 pt-3 pt-sm-4 pb-3 pb-sm-5">                                              
+                      <div class="mt-2 mt-lg-1 d-flex" *ngIf="(roleDisplayPage == 'DETAILS')" >                     
+                        <mat-form-field class="mx-2">
+                            <input  [disabled]="!isEdit" matInput placeholder="Name"  [(ngModel)]="activeModel.RoleName" name="RoleName" >
+                        </mat-form-field>
+                        <section class="mx-2 pt-3">
+                          <mat-checkbox [(ngModel)]="activeModel.IsAdministrator" [disabled]="!isEdit">Is Administrator</mat-checkbox>                          
+                        </section>                                                  
+                      </div>  
+                      
+                      <div class="d-flex flex-column bd-highlight mb-3 align-items-center" *ngIf="(roleDisplayPage == 'POLICIES')">                                                 
+                        <!--Table-->
+                        <div class="table-responsive pt-4 pt-sm-5 " *ngIf="activeModel.GroupEntityAccessPolicies?.length > 0  && !activeModel.IsAdministrator">
+                          <table class="table table table-striped w-auto mb-2 mb-sm-0" >
+                            <thead class="small thead-light2">
+                              <tr>
+                                <th class="text-left">EntityType</th>
+                                <th class="text-left">AccessType</th>
+                                <th *ngIf="isEdit" width="1px"></th>
+                              </tr>
+                            </thead>
+                            <tbody class="border-bottom">
+                              <tr *ngFor="let policy of activeModel.GroupEntityAccessPolicies; let i = index" >       
+                                <td>           
+                                  <b-details-picker [isDisabled]="!isEdit"  [(ngModel)]="policy.EntityTypeId" [formatter]="entityTypeFormatter" [isRequired]="true"                                       
+                                            [searchResults$]="entityTypes$" [loading$]="entityTypeLoading$" [error$]="entityTypeError$" (onTerm)="onEntityTypeTerm($event)">
+                                  </b-details-picker>
+                                </td>
+                                <td>
+                                  <mat-form-field *ngIf="!isEdit">
+                                    <input   [disabled]="true" matInput  [value]="getAccessTypeKey(policy.AccessType)" >                                                                  
+                                  </mat-form-field>
+                                  <mat-form-field  *ngIf="isEdit">                                   
+                                    <mat-select  [(ngModel)]="policy.AccessType" [disabled]="!isEdit"  name="AccessType" required #accessTypeControl="ngModel">                                                                          
+                                      <mat-option *ngFor="let accessType of accessTypes"[value]="accessType.value">
+                                        {{ accessType.key }}
+                                      </mat-option>                                     
+                                    </mat-select> 
+                                    <mat-error *ngIf="!!accessTypeControl && accessTypeControl.invalid">You must select a value</mat-error>                                 
+                                  </mat-form-field>
+                                </td>                          
+                                <td *ngIf="isEdit" style="width:1px">
+                                  <fa-icon class="text-danger b-pointer" icon="trash-alt" (click)="onDeletePolicy(i, activeModel)" title="Delete"></fa-icon>
+                                </td>
+                              </tr>
+                              <tr *ngIf="!isEdit && activeModel.GroupEntityAccessPolicies?.length < 1">
+                                <td class="font-italic font-weight-light text-muted" colspan="1000">No policies to display.</td>
+                              </tr>
+                              <tr *ngIf="isEdit">
+                                <td colspan="1000">&nbsp;<button class="btn btn-link text-primary p-0 border-0" type="button" (focus)="onAddPolicy()">Add a policy...</button></td>
+                              </tr>                             
+                            </tbody>
+                          </table>
+                        </div>
+                        <div *ngIf="activeModel.GroupEntityAccessPolicies?.length < 1 && !activeModel.IsAdministrator">
+                          <span class="font-italic font-weight-light text-muted">No Policy.</span>
+                        </div>
+                        <div *ngIf="activeModel.IsAdministrator">
+                          <span class="font-italic font-weight-light text-muted">Admin has all rights.</span>
+                        </div> 
+                      </div>
+
+                    </div>
+                  </div>
+                </div>
+              </mat-card-content>                
+            </mat-card>
+          </div>
+
+          <!-- Spinner -->
+          <div class="w-100 p-2 d-flex justify-content-center" *ngIf="(loading$ | async)">
+            <b-spinner [scale]="2"></b-spinner>
+          </div>          
+          <!-- Error message -->
+          <b-error-message *ngIf="(error$ | async)">
+            {{ error$ | async }}
+          </b-error-message>                            
+                           
+        </div>  
+      </div>   
+  </mat-card-content>           
+</mat-card>
+
+
+<!-- Confirm Delete Modal -->
+<ng-template #confirmDeleteModal let-modal>
+<div class="modal-header">
+  <h5 class="modal-title">Confirmation</h5>
+  <button type="button" class="close" aria-label="Close" (click)="modal.dismiss()">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+<div class="modal-body">Are you sure you want to delete?</div>
+<div class="modal-footer">
+  <button class="btn btn-primary" (click)="modal.dismiss(); onDelete();">Yes</button>
+  <button class="btn btn-light text-primary b-white-button" (click)="modal.dismiss()">No</button>
+</div>
+</ng-template>

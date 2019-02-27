@@ -1,7 +1,7 @@
 import { Action } from '@ngrx/store';
 import { RoleDto } from 'src/app/shared/models';
 
-export enum RoleDisplayPage { Details = 'DETAILS', EntityTypes = 'ENTITYTYPES'}
+export enum RoleDisplayPage { Details = 'DETAILS', Policies = 'POLICIES'}
 
 export enum RoleActionTypes {
 
@@ -12,7 +12,7 @@ export enum RoleActionTypes {
     SelectRole = '[Account Role Page] Select Role',
     ClearSelectedRole = '[Account Role Page] Clear Selected Role',    
     SelectRoleDisplayPage = '[Account Role Page] Select Role Display Page',
-    SetRoleTerm = '[Account Role Page] Set Role Term',
+    SetRoleSearchTerm = '[Account Role Page] Set Role Search Term',   
 
     SaveRole = '[Account/Roles/API] Save Role',
     SaveRoleSuccess = '[Account/Roles/API] Save Role Success',
@@ -21,6 +21,12 @@ export enum RoleActionTypes {
     UpdateRole = '[Account/Roles/API] Update Role',
     UpdateRoleSuccess = '[Account/Roles/API] Update Role Success',
     UpdateRoleFailure = '[Account/Roles/API] Update Role Failure',
+
+    DeleteRole = '[Account/Roles/API] Delete Role',
+    DeleteRoleSuccess = '[Account/Roles/API] Delete Role Success',
+    DeleteRoleFailure = '[Account/Roles/API] Delete Role Failure',
+
+    ClearRoles = '[Account/Roles/API] ClearRoles',
 
 }
 
@@ -57,8 +63,8 @@ export class SelectRole implements Action {
     constructor(public payload:RoleDto) {}
 }
 
-export class SetRoleTerm implements Action {
-    readonly type = RoleActionTypes.SetRoleTerm;
+export class SetRoleSearchTerm implements Action {
+    readonly type = RoleActionTypes.SetRoleSearchTerm;
   
     constructor(public payload:string) {}
 }
@@ -75,7 +81,7 @@ export class SelectRoleDisplayPage implements Action {
 export class SaveRole implements Action {
     readonly type = RoleActionTypes.SaveRole;
   
-    constructor(public payload:  RoleDto) {}
+    constructor(public payload: {roleDto : RoleDto, officeId: string}  ) {}
 }
 
 export class SaveRoleSuccess implements Action {
@@ -93,7 +99,7 @@ export class SaveRoleFailure implements Action {
 export class UpdateRole implements Action {
     readonly type = RoleActionTypes.UpdateRole;
   
-    constructor(public payload:  RoleDto) {}
+    constructor(public payload: {roleDto : RoleDto, officeId: string}  ) {}
 }
 
 export class UpdateRoleSuccess implements Action {
@@ -106,6 +112,28 @@ export class UpdateRoleFailure implements Action {
     readonly type = RoleActionTypes.UpdateRoleFailure;
 
     constructor(public payload: string) {}
+}
+
+export class DeleteRole implements Action {
+    readonly type = RoleActionTypes.DeleteRole;
+  
+    constructor(public payload: {roleId : string, officeId: string}  ) {}
+}
+
+export class DeleteRoleSuccess implements Action {
+    readonly type = RoleActionTypes.DeleteRoleSuccess;
+
+    constructor(public payload: RoleDto) {}
+}
+
+export class DeleteRoleFailure implements Action {
+    readonly type = RoleActionTypes.DeleteRoleFailure;
+
+    constructor(public payload: string) {}
+}
+
+export class ClearRoles implements Action {
+    readonly type = RoleActionTypes.ClearRoles;  
 }
 
 /**
@@ -125,4 +153,8 @@ GetRoles
 |UpdateRoleSuccess
 |UpdateRoleFailure
 |SelectRoleDisplayPage
-|SetRoleTerm;
+|SetRoleSearchTerm
+|DeleteRole
+|DeleteRoleSuccess
+|DeleteRoleFailure
+|ClearRoles;
