@@ -14,7 +14,7 @@ import {
 
 import { ApiService } from 'src/app/shared/services/api.services';
 import { UserDto } from 'src/app/shared/models';
-import { GetUsers, UserActionTypes, GetUsersSuccess, GetUsersFailure, SaveUser, SaveUserSuccess, SaveUserFailure, UpdateUser, UpdateUserSuccess, UpdateUserFailure } from '../actions';
+import { GetUsers, UserActionTypes, GetUsersSuccess, GetUsersFailure, SaveUser, SaveUserSuccess, SaveUserFailure, UpdateUser, UpdateUserSuccess, UpdateUserFailure, AddExistingUser, AddExistingUserSuccess, AddExistingUserFailure, DeleteOfficeUser, DeleteOfficeUserSuccess, DeleteRoleFailure, DeleteOfficeUserFailure } from '../actions';
 /**
  * Effects offer a way to isolate and easily test side-effects within your
  * application.
@@ -93,6 +93,51 @@ export class UserEffects {
             takeUntil(nextSearch$),
             map((user: UserDto) => new UpdateUserSuccess(user)),
             catchError(err => of(new UpdateUserFailure(err)))
+          );
+        })
+      );
+    @Effect()
+    AddExistingUser$ = ({ debounce = 300, scheduler = asyncScheduler } = {}): Observable<
+      Action
+    > =>
+      this.actions$.pipe(
+        ofType<AddExistingUser>(
+            UserActionTypes.AddExistingUser
+        ),
+        debounceTime(debounce, scheduler),
+        map(action => action.payload),
+        switchMap((payload) => {       
+          const nextSearch$ = this.actions$.pipe(
+            ofType(UserActionTypes.AddExistingUser),
+            skip(1)
+          );      
+          return this.apiSerivce.post<UserDto>(`account/officeusers/${payload.officeId}`,payload.userDto).pipe(
+            takeUntil(nextSearch$),
+            map((user: UserDto) => new AddExistingUserSuccess(user)),
+            catchError(err => of(new AddExistingUserFailure(err)))
+          );
+        })
+      );
+
+    @Effect()
+    DeleteOfficeUser$ = ({ debounce = 300, scheduler = asyncScheduler } = {}): Observable<
+      Action
+    > =>
+      this.actions$.pipe(
+        ofType<DeleteOfficeUser>(
+            UserActionTypes.DeleteOfficeUser
+        ),
+        debounceTime(debounce, scheduler),
+        map(action => action.payload),
+        switchMap((payload) => {       
+          const nextSearch$ = this.actions$.pipe(
+            ofType(UserActionTypes.DeleteOfficeUser),
+            skip(1)
+          );      
+          return this.apiSerivce.delete<UserDto>(`account/officeusers/${payload.officeId}/${payload.userId}`).pipe(
+            takeUntil(nextSearch$),
+            map((user: UserDto) => new DeleteOfficeUserSuccess(user)),
+            catchError(err => of(new DeleteOfficeUserFailure(err)))
           );
         })
       );

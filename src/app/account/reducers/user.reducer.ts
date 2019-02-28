@@ -8,6 +8,7 @@ import { UserActionsUnion, UserActionTypes, UserDisplayPage } from "../actions";
     error: string;
     selectedUserId: string;
     userDisplayPage: UserDisplayPage;
+    addExistingUser: boolean;
   }
 
   export const userInitialState: UserState = {
@@ -16,6 +17,7 @@ import { UserActionsUnion, UserActionTypes, UserDisplayPage } from "../actions";
     error: '',
     selectedUserId: '',
     userDisplayPage: UserDisplayPage.Details,
+    addExistingUser: false,
   };
   
   export function userReducer(
@@ -38,6 +40,7 @@ import { UserActionsUnion, UserActionTypes, UserDisplayPage } from "../actions";
           error: '',
           selectedUserId: '',
           userDisplayPage: UserDisplayPage.Details,
+          addExistingUser: false,
         };
       }
   
@@ -123,6 +126,70 @@ import { UserActionsUnion, UserActionTypes, UserDisplayPage } from "../actions";
         };
       }
 
+      case UserActionTypes.AddExistingUser: {
+          return {
+            ...state,
+            loading: true,
+            error: '',
+        };
+      }
+
+      case UserActionTypes.AddExistingUserSuccess: {
+        var te = state.users.filter(t => t.Id != action.payload.Id);
+        return {
+          ...state,
+          users: [...te ,action.payload],
+          loading: false,
+          error: '',
+          selectedUserId: action.payload.Id,
+          addExistingUser: false,
+        };
+      }
+
+      case UserActionTypes.AddExistingUserFailure: {
+        return {
+            ...state,
+            loading: false,
+            error: action.payload,          
+        };
+      }
+      case UserActionTypes.AddExistingUserToggle: {
+        return {
+            ...state,
+            addExistingUser: action.payload,             
+        };
+      }
+
+      case UserActionTypes.DeleteOfficeUser: {
+          return {
+            ...state,
+            loading: true,
+            error: '',
+        };
+      }
+
+      case UserActionTypes.DeleteOfficeUserSuccess: {
+        var te = state.users.filter(t => t.Id != action.payload.Id);
+        return {
+          ...state,
+          users: te,
+          loading: false,
+          error: '',
+          selectedUserId: '',
+        };
+      }
+
+      case UserActionTypes.DeleteOfficeUserFailure: {
+        return {
+            ...state,
+            loading: false,
+            error: action.payload,          
+        };
+      }
+      case UserActionTypes.ClearUsers: {
+        return userInitialState;
+      }
+
       default: {
         return state;
       }
@@ -133,6 +200,7 @@ import { UserActionsUnion, UserActionTypes, UserDisplayPage } from "../actions";
   export const getUserLoading = (state: UserState) => state.loading;
   export const getUserError = (state: UserState) => state.error;
   export const getSelectedUserId = (state: UserState) => state.selectedUserId;
+  export const isAddingExistingUser = (state: UserState) => state.addExistingUser;
 
   
   

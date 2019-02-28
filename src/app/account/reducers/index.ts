@@ -48,6 +48,7 @@ import {
   export const getSelectedUserId = createSelector(selectUserState, fromUser.getSelectedUserId);
   export const getSelectedUser = createSelector(getUsers,getSelectedUserId,  (users, id)  => !!id && users.find(t => !!id && t.Id == id)); 
   export const getUserDisplayPage = createSelector(selectUserState, state => state.userDisplayPage);
+  export const isAddingExistingUser = createSelector(selectUserState, fromUser.isAddingExistingUser);
   ///////////////////////////////
   export const selectRoleState = createSelector( selectAccountState ,(state: AccountState) => state.RoleState);
   export const getRoles = createSelector(selectRoleState, fromRole.getRoles);

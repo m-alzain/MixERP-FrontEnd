@@ -17,7 +17,7 @@ const routes: Routes = [
         path: 'tenants/:id',
         component: TenantDetailComponent,
       },
-      { path: 'users', component: UserListComponent },
+      { path: 'users', component: UserListComponent, canDeactivate: [CanDeactivateGuard] },
       { path: 'roles', component: RoleListComponent, canDeactivate: [CanDeactivateGuard] },
     ],
   }

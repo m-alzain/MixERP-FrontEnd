@@ -20,8 +20,18 @@ export enum UserActionTypes {
 
     UpdateUser = '[Account/Users/API] Update User',
     UpdateUserSuccess = '[Account/Users/API] Update User Success',
-    UpdateUserFailure = '[Account/Users/API] Update User Failure',   
+    UpdateUserFailure = '[Account/Users/API] Update User Failure', 
+    
+    AddExistingUser = '[Account/Users/API] AddExisting User',
+    AddExistingUserSuccess = '[Account/Users/API] AddExisting User Success',
+    AddExistingUserFailure = '[Account/Users/API] AddExisting User Failure', 
+    AddExistingUserToggle = '[Account User Page] AddExisting User Toggle',
 
+    DeleteOfficeUser = '[Account/Users/API] Delete OfficeUser',
+    DeleteOfficeUserSuccess = '[Account/Users/API] Delete OfficeUser Success',
+    DeleteOfficeUserFailure = '[Account/Users/API] Delete OfficeUser Failure',
+
+    ClearUsers = '[Account/Users/API] Clear Users',
 }
 
 /**
@@ -102,6 +112,51 @@ export class UpdateUserFailure implements Action {
     constructor(public payload: string) {}
 }
 
+export class AddExistingUser implements Action {
+    readonly type = UserActionTypes.AddExistingUser;
+  
+    constructor(public payload: {userDto: UserDto, officeId: string}) {}
+}
+
+export class AddExistingUserSuccess implements Action {
+    readonly type = UserActionTypes.AddExistingUserSuccess;
+
+    constructor(public payload: UserDto) {}
+}
+
+export class AddExistingUserFailure implements Action {
+    readonly type = UserActionTypes.AddExistingUserFailure;
+
+    constructor(public payload: string) {}
+}
+
+export class AddExistingUserToggle implements Action {
+    readonly type = UserActionTypes.AddExistingUserToggle; 
+    constructor(public payload: boolean) {} 
+}
+
+export class DeleteOfficeUser implements Action {
+    readonly type = UserActionTypes.DeleteOfficeUser;
+  
+    constructor(public payload: {userId : string, officeId: string}  ) {}
+}
+
+export class DeleteOfficeUserSuccess implements Action {
+    readonly type = UserActionTypes.DeleteOfficeUserSuccess;
+
+    constructor(public payload: UserDto) {}
+}
+
+export class DeleteOfficeUserFailure implements Action {
+    readonly type = UserActionTypes.DeleteOfficeUserFailure;
+
+    constructor(public payload: string) {}
+}
+
+export class ClearUsers implements Action {
+    readonly type = UserActionTypes.ClearUsers;     
+}
+
 /**
  * Export a type alias of all actions in this action group
  * so that reducers can easily compose action types
@@ -118,4 +173,12 @@ GetUsers
 |UpdateUser
 |UpdateUserSuccess
 |UpdateUserFailure
-|SelectUserDisplayPage;
+|SelectUserDisplayPage
+|AddExistingUser
+|AddExistingUserSuccess
+|AddExistingUserFailure
+|AddExistingUserToggle
+|DeleteOfficeUser
+|DeleteOfficeUserSuccess
+|DeleteOfficeUserFailure
+|ClearUsers;

@@ -46,6 +46,7 @@ export class RoleListComponent implements OnDestroy, OnInit, CanComponentDeactiv
   private selectedRoleSubscription: Subscription;
   private selectedOfficeIdSubscription: Subscription;
   private roleDisplayPageSubscription: Subscription;
+  private selectedEntityTypePolicyAccessTypeSubscription: Subscription;
   private isAdminSubscription: Subscription;
 
   // entityTypes
@@ -58,30 +59,31 @@ export class RoleListComponent implements OnDestroy, OnInit, CanComponentDeactiv
   }
   accessTypes: {key:any; value: any}[];
 
-  constructor(private store: Store<fromRoot.State>, private router: Router, private route: ActivatedRoute, public modalService: NgbModal) {
-    this.roles$ = store.pipe(select(fromAccount.getRoles));
-    this.loading$ = store.pipe(select(fromAccount.getRoleLoading));
-    this.loading$.subscribe(a => this.loading = a);
-    this.error$ = store.pipe(select(fromAccount.getRoleError));
-    this.selectedRole$ = store.pipe(select(fromAccount.getSelectedRole));
-    this.selectedRole$.subscribe(a => this.viewModel = a);
-    this.selectedOfficeId$ = store.pipe(select(fromAuth.getSelectedOfficeId));
-    this.selectedOfficeId$.subscribe(a => this.selectedOfficeId = a);
-    this.roleDisplayPage$ = store.pipe(select(fromAccount.getRoleDisplayPage));
-    this.roleDisplayPage$.subscribe(a => {this.roleDisplayPage = a;});
-    this.selectedEntityTypePolicyAccessType$ =  store.pipe(select(fromAuth.getSelectedEntityTypePolicyAccessType));
-    this.selectedEntityTypePolicyAccessType$.subscribe(a => this.selectedEntityTypePolicyAccessType = a);
-    this.isAdmin$ = store.pipe(select(fromAuth.isAdmin));
-    this.isAdmin$.subscribe(a => this.isAdmin = a);
-
-    // entityTypes
-    this.entityTypes$ = store.pipe(select(fromAuth.getSearchedEntityTypes));
-    this.entityTypeLoading$ = store.pipe(select(fromAuth.getEntityTypeLoading));
-    this.entityTypeError$ = store.pipe(select(fromAuth.getEntityTypeError));    
-    // this.store.dispatch(new GetEntityType()); already been dispatched at the starting of the app
+  constructor(private store: Store<fromRoot.State>, private router: Router, private route: ActivatedRoute, public modalService: NgbModal) {   
   }
 
   ngOnInit(){
+    this.roles$ = this.store.pipe(select(fromAccount.getRoles));
+    this.loading$ = this.store.pipe(select(fromAccount.getRoleLoading));
+    this.loadingSubscription = this.loading$.subscribe(a => this.loading = a);
+    this.error$ = this.store.pipe(select(fromAccount.getRoleError));
+    this.selectedRole$ = this.store.pipe(select(fromAccount.getSelectedRole));
+    this.selectedRoleSubscription = this.selectedRole$.subscribe(a => this.viewModel = a);
+    this.selectedOfficeId$ = this.store.pipe(select(fromAuth.getSelectedOfficeId));
+    this.selectedOfficeIdSubscription = this.selectedOfficeId$.subscribe(a => this.selectedOfficeId = a);
+    this.roleDisplayPage$ = this.store.pipe(select(fromAccount.getRoleDisplayPage));
+    this.roleDisplayPageSubscription = this.roleDisplayPage$.subscribe(a => {this.roleDisplayPage = a;});
+    this.selectedEntityTypePolicyAccessType$ =  this.store.pipe(select(fromAuth.getSelectedEntityTypePolicyAccessType));
+    this.selectedEntityTypePolicyAccessTypeSubscription = this.selectedEntityTypePolicyAccessType$.subscribe(a => this.selectedEntityTypePolicyAccessType = a);
+    this.isAdmin$ = this.store.pipe(select(fromAuth.isAdmin));
+    this.isAdminSubscription = this.isAdmin$.subscribe(a => this.isAdmin = a);
+
+    // entityTypes
+    this.entityTypes$ = this.store.pipe(select(fromAuth.getSearchedEntityTypes));
+    this.entityTypeLoading$ = this.store.pipe(select(fromAuth.getEntityTypeLoading));
+    this.entityTypeError$ = this.store.pipe(select(fromAuth.getEntityTypeError));    
+    // this.store.dispatch(new GetEntityType()); already been dispatched at the starting of the app
+
     this.fetch();
     this.accessTypes = getENUM(AccessType);
     
@@ -105,6 +107,9 @@ export class RoleListComponent implements OnDestroy, OnInit, CanComponentDeactiv
     if (!!this.roleDisplayPageSubscription) {
       this.roleDisplayPageSubscription.unsubscribe();
     }
+    if (!!this.selectedEntityTypePolicyAccessTypeSubscription) {
+      this.selectedEntityTypePolicyAccessTypeSubscription.unsubscribe();
+    } 
     if (!!this.isAdminSubscription) {
       this.isAdminSubscription.unsubscribe();
     }   
@@ -159,7 +164,6 @@ export class RoleListComponent implements OnDestroy, OnInit, CanComponentDeactiv
   get activeModel() {
     return this.isEdit ? this.editModel : this.viewModel;
   }
-
 
   get canCreate(): boolean {
     return !this.canUpdatePred || this.canUpdatePred();

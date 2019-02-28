@@ -53,7 +53,7 @@
                     <!-- View Toolbar -->
                     <div>
                       <!-- Edit -->
-                      <button *ngIf="!isEdit && !!activeModel && (userDisplayPage == 'DETAILS' || (userDisplayPage == 'ROLES' && activeModel.Roles?.length ==1))" [disabled]="!canEdit" class="btn btn-light btn-sm text-primary b-white-button" (click)="onEdit()" >
+                      <button *ngIf="!isEdit && !!activeModel" [disabled]="!canEdit" class="btn btn-light btn-sm text-primary b-white-button" (click)="onEdit()" >
                         <fa-icon icon="edit"></fa-icon>
                         <span class="d-none d-md-inline">&nbsp;&nbsp;Edit</span>
                       </button>                                                       
@@ -65,7 +65,7 @@
                       </button>
               
                       <!-- Add -->
-                      <button *ngIf="(!isEdit && userDisplayPage == 'DETAILS') || (userDisplayPage == 'ROLES' && activeModel.Roles?.length < 1)" [disabled]="!canCreate" class="btn btn-light btn-sm text-primary b-white-button" (click)="onAdd()">
+                      <button *ngIf="(!isEdit && userDisplayPage == 'DETAILS') || (isEdit && userDisplayPage == 'ROLES' && activeModel.Roles?.length < 1)" [disabled]="!canCreate" class="btn btn-light btn-sm text-primary b-white-button" (click)="onAdd()">
                         <fa-icon icon="plus"></fa-icon>
                         <span class="d-none d-md-inline">&nbsp;&nbsp;Add</span>
                       </button>
@@ -96,42 +96,36 @@
 
                   <div class="p-0 p-sm-3 d-flex flex-column align-items-center border-top" *ngIf="!this.loading || this.isEdit">
                     <div class="border bg-white w-100 b-paper" (dblclick)="onDblClick()">
+                      <b-error-message *ngIf="!!validationError">
+                        {{ validationError }}
+                      </b-error-message>   
                       <div class="row m-0 pl-1 pl-sm-3 pr-1 pr-sm-3 pt-3 pt-sm-4 pb-3 pb-sm-5">                        
-                         
+                         <p *ngIf="isAddingExistingUser && userDisplayPage != 'ROLES'" class="font-italic font-weight-light text-muted">You are adding an existing user!</p>
                         <div class="mt-2 mt-lg-1 col-12" *ngIf="(userDisplayPage == 'DETAILS') && !(loading$ | async)" >
-                          <mat-form-field class="mx-2">
+                          <mat-form-field  class="mx-2">
                               <input  [disabled]="!isEdit" matInput placeholder="Email"  [(ngModel)]="activeModel.Email" name="Email">
                           </mat-form-field>
-                          <mat-form-field class="mx-2">
+                          <mat-form-field *ngIf="!isAddingExistingUser" class="mx-2">
                               <input  [disabled]="!isEdit" matInput placeholder="Name"  [(ngModel)]="activeModel.Name" name="Name" >
                           </mat-form-field>
-                          <mat-form-field class="mx-2">
+                          <mat-form-field *ngIf="!isAddingExistingUser" class="mx-2">
                               <input  [disabled]="!isEdit" matInput placeholder="Phone"  [(ngModel)]="activeModel.Phone" name="Phone">
                           </mat-form-field>
-                          <mat-form-field class="mx-2">
+                          <mat-form-field *ngIf="!isAddingExistingUser" class="mx-2">
                               <input  [disabled]="!isEdit" matInput placeholder="Status"  [(ngModel)]="activeModel.Status" name="Status" >
                           </mat-form-field>                               
                         </div>  
                         
-                        <div class="d-flex flex-column bd-highlight mb-3 align-items-center" *ngIf="(userDisplayPage == 'ROLES') && !(loading$ | async)">                          
-                          <!-- <div *ngFor="let role of activeModel.Roles; let i = index " class="p-2 bd-highlight"> -->
-
-                            <tr *ngIf="activeModel.Roles?.length < 1">
-                              <td class="font-italic font-weight-light text-muted" colspan="1000">No Role.</td>
-                            </tr>
-
-                            <button *ngIf="!isEdit && activeModel.Roles?.length == 1" class="btn btn-light btn-sm text-primary b-white-button" mat-button >{{activeModel.Roles[0].RoleName}}</button>
-                            <div *ngIf="isEdit && activeModel.Roles?.length == 1" class="d-flex justify-content-start">
-                              <b-details-picker  [(ngModel)]="activeModel.Roles[0].Id" [formatter]="roleFormatter" [focusIf]='true' required
-                                        #roleControl="ngModel" [class.is-invalid]="roleControl.invalid && roleControl.touched" 
-                                        [searchResults$]="roles$" [loading$]="roleLoading$" [error$]="roleError$" (onTerm)="onRoleTerm($event)">
-                              </b-details-picker>
-                              <!-- <span >
-                                  &nbsp;&nbsp;<fa-icon class="text-danger b-pointer" icon="trash-alt" (click)="onDeleteRole(i, activeModel)" title="Delete"></fa-icon>
-                              </span>  -->
-                            </div>                                                     
-                          <!-- </div>  -->
-                          <!-- <button  *ngIf="isEdit" class="btn btn-link text-primary p-0 border-0" type="button" (focus)="onAddRole(activeModel)"> &nbsp; Add a Role...</button>                           -->
+                        <div class="d-flex flex-column bd-highlight mb-3 align-items-center" *ngIf="(userDisplayPage == 'ROLES') && !(loading$ | async)">                                                   
+                          <div *ngIf="activeModel.Roles?.length < 1">
+                            <span class="font-italic font-weight-light text-muted">No Role.</span>
+                          </div>
+                          <button *ngIf="!isEdit && activeModel.Roles?.length == 1" class="btn btn-light btn-sm text-primary b-white-button" mat-button >{{activeModel.Roles[0].RoleName}}</button>
+                          <div *ngIf="isEdit && activeModel.Roles?.length == 1" class="d-flex justify-content-start">
+                            <b-details-picker  [(ngModel)]="activeModel.Roles[0].Id" [formatter]="roleFormatter" [focusIf]='true' [isRequired]="true"                                       
+                                      [searchResults$]="roles$" [loading$]="roleLoading$" [error$]="roleError$" (onTerm)="onRoleTerm($event)">
+                            </b-details-picker>                             
+                          </div>                                                                               
                         </div>
 
                       </div>
@@ -144,9 +138,7 @@
             <!-- Spinner -->
             <div class="w-100 p-2 d-flex justify-content-center" *ngIf="(loading$ | async)">
               <b-spinner [scale]="2"></b-spinner>
-            </div>         
-            <!-- No items found -->
-            <!-- <div class="w-100 pl-3 pr-3" *ngIf="showNoItemsFound">No items found.</div> -->  
+            </div>                     
             <!-- Error message -->
             <b-error-message *ngIf="(error$ | async)">
               {{ error$ | async }}
