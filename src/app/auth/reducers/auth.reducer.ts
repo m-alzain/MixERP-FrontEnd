@@ -94,6 +94,9 @@ export function authContextReducer(
           selectedEntityTypeId: action.payload,
       };
     }
+    case AuthActionTypes.LogoutSuccess: {
+      return authContexInitialState;
+    }
 
     default: {
       return state;
@@ -157,6 +160,10 @@ export function entityTypeReducer(
           ...state,
           entityTypeSearchTerm: action.payload,
       };
+    }
+
+    case AuthActionTypes.LogoutSuccess: {
+      return entityTypeInitialState;
     }
 
 

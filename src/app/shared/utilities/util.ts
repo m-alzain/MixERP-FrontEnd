@@ -11,12 +11,12 @@ export function friendly(error: any) {
         result = `Unable to reach the server, please check the connection of your device`;
         break;
       }
-      case 400: { // Bad Request
+      case 400: { // Bad Request  -- ServiceException from the backend
         if (error.error instanceof Blob) {
           // Need a better solution to handle blobs
           result = 'Unknown error';
         } else {
-          result = error.error;
+          result = error.error.errors;
         }
         break;
       }

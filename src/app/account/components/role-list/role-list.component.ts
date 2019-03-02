@@ -175,8 +175,7 @@ export class RoleListComponent implements OnDestroy, OnInit, CanComponentDeactiv
     return !!this.viewModel && (!this.canUpdatePred || this.canUpdatePred());
   }
   canUpdatePred = () => {    
-    //return (this.isAdmin || this.selectedEntityTypePolicyAccessType >= AccessType.EDIT); // CREATE, UPDATE, DELETE == EDIT
-    return true;
+    return (this.isAdmin || this.selectedEntityTypePolicyAccessType >= AccessType.EDIT); // CREATE, UPDATE, DELETE == EDIT
   }
   get canSave(): boolean {    
     return !this.loading;

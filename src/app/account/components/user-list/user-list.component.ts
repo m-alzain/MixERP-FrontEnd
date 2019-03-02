@@ -173,8 +173,7 @@ export class UserListComponent implements OnDestroy, OnInit , CanComponentDeacti
     return !!this.viewModel && (!this.canUpdatePred || this.canUpdatePred());
   }
   canUpdatePred = () => {    
-    //return (this.isAdmin || this.selectedEntityTypePolicyAccessType >= AccessType.EDIT); // CREATE, UPDATE, DELETE == EDIT
-    return true;
+    return (this.isAdmin || this.selectedEntityTypePolicyAccessType >= AccessType.EDIT); // CREATE, UPDATE, DELETE == EDIT
   }
   get canSave(): boolean {    
     return !this.loading;
